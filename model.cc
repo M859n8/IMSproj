@@ -26,7 +26,7 @@ public:
 
     void Behavior() {
         // start: 
-        while (true) {
+        while (Time < ClOSE_TIME - 10*60) {
             //change this? delete ? 
             // if ((SingleRideQ->Length()+RegularRideQ->Length()) < currentAttraction.capacity) {
             // if ((SingleRideQ->Length()+RegularRideQ->Length()) < RIDE_CAPACITY) { додати що більше однієї людини
@@ -89,19 +89,19 @@ public:
             // }
 
             Wait(currentAttraction.rideDuration); // Ride lasts for 5 minutes
-            printf("    1\n");
+            // printf("    1\n");
               for (auto& rider : riders_in_cabin) {
-            printf("    2\n");
+            // printf("    2\n");
 
                 rider->Activate();
             }
-            printf("    3\n");
+            // printf("    3\n");
 
             // Ride completes, all riders are done
             //  Print("Атракціон завершився, перевезено %d пасажирів на час %.2f\n",row_end, Time);
             riders_in_cabin.clear();
 
-            printf("    4\n");
+            // printf("    4\n");
             // Passivate();
             // goto start;
 
@@ -172,15 +172,15 @@ class Person : public Process{
                   
                     go_to_attraction(SingleRideZero, RegularRideQ0);
                     // printf("3 SimgleQ : %d, RegularQ : %d\n", SingleRideZero.Length() , RegularRideQ0.Length());
-printf("1\n");
+// printf("1\n");
                     if ((SingleRideZero.Length()+RegularRideQ0.Length()) >= current_attraction.capacity) {
-printf("2\n");
+// printf("2\n");
 
                         ptr0->setcurrentAttraction(current_attraction, SingleRideZero, RegularRideQ0);
-printf("3\n");
+// printf("3\n");
 
                         ptr0->Activate(); // Активуємо атракціон, якщо черга наповнена
-printf("4\n");
+// printf("4\n");
 
 
                     } 
@@ -193,23 +193,23 @@ printf("4\n");
 
                     go_to_attraction(SingleRideQ1, RegularRideQ1);
 
-                    if ((SingleRideQ1.Length()+RegularRideQ1.Length()) >= RIDE_CAPACITY) {
-printf("5\n");
+                    if ((SingleRideQ1.Length()+RegularRideQ1.Length()) >= current_attraction.capacity) {
+// printf("5\n");
 
                         ptr1->setcurrentAttraction(current_attraction, SingleRideQ1, RegularRideQ1);
-printf("5.1\n");
+// printf("5.1\n");
 
                         ptr1->Activate(); 
-printf("5.2\n");
+// printf("5.2\n");
 
 
                     } 
 
                     Passivate(); 
-printf("5.4\n");
+// printf("5.4\n");
 
                     // Wait(current_attraction.rideDuration); 
-printf("5.5\n");
+// printf("5.5\n");
 
                     break;
                 case 2:
@@ -217,8 +217,8 @@ printf("5.5\n");
 
                     go_to_attraction(SingleRideQ2, RegularRideQ2);
 
-                    if ((SingleRideQ2.Length()+RegularRideQ2.Length()) >= RIDE_CAPACITY) {
-printf("6\n");
+                    if ((SingleRideQ2.Length()+RegularRideQ2.Length()) >=current_attraction.capacity) {
+// printf("6\n");
 
                         ptr2->setcurrentAttraction(current_attraction, SingleRideQ2, RegularRideQ2);
                         ptr2->Activate(); 
@@ -230,10 +230,10 @@ printf("6\n");
                     income(5); 
                     // printf("chosen attraction id %d\n", this->current_attraction.id );
                     go_to_attraction(SingleRideZero, RegularRideQ3);
-                    printf("    single rider length : %d . ID of the ride %d\n" , SingleRideZero.Length(), current_attraction.id);
+                    // printf("    single rider length : %d . ID of the ride %d\n" , SingleRideZero.Length(), current_attraction.id);
 
-                    if ((SingleRideZero.Length()+RegularRideQ3.Length()) >= RIDE_CAPACITY) {
-printf("7\n");
+                    if ((SingleRideZero.Length()+RegularRideQ3.Length()) >= current_attraction.capacity) {
+// printf("7\n");
 
                         ptr3->setcurrentAttraction(current_attraction, SingleRideZero, RegularRideQ3);
                         ptr3->Activate(); 
@@ -388,7 +388,7 @@ int main(int argc , char **argv)
 {
     int people_count;
     if (argc < 2) {
-        printf("Error: Missing argument for season (summer or winter)\n");
+        // printf("Error: Missing argument for season (summer or winter)\n");
         return 1;
     }
 
@@ -397,7 +397,7 @@ int main(int argc , char **argv)
     } else if (strcmp(argv[1], "winter") == 0) {
         people_count = LOW_AMOUNT;
     } else {
-        printf("Error: Invalid season argument\n");
+        // printf("Error: Invalid season argument\n");
         return 1;
     }
 
@@ -446,11 +446,11 @@ int main(int argc , char **argv)
     // SingleRideQ3.Output();
 
 
-    for(int i= 0; i<ENTRANCE; i++){
-        EntranceL[i].Output();
-        // EntranceL.Output();
+    // for(int i= 0; i<ENTRANCE; i++){
+    //     EntranceL[i].Output();
+    //     // EntranceL.Output();
 
-    }
+    // }
     // for(int i= 0; i<Ride1AMOUNT; i++){
     // Ride1[i].Output();
     // }

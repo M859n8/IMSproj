@@ -6,14 +6,14 @@
 #include <algorithm>
 #include <limits>
 
-const int HIGH_AMOUNT = 7000;
+const int HIGH_AMOUNT = 5000; //was 7000
 const int SUPERHIGH_AMOUNT = 75;
 const int MIDDLE_AMOUNT = 50;
 const int LOW_AMOUNT = 40;
-#define ENTRANCE 3//was 30
+#define ENTRANCE 30//was 30
 
 // #define Ride1AMOUNT 10//was 30
-#define RIDE_CAPACITY 20 //was 20
+// #define RIDE_CAPACITY 20 //was 20
 
 // Структура для зберігання даних про атракціон
 struct Attraction {
