@@ -4,58 +4,121 @@
 
 
 class Ride : public Process {
+private:
+    Attraction currentAttraction;
+    Queue* SingleRideQ;  // Зберігаємо вказівник
+    Queue* RegularRideQ; // Зберігаємо вказівник
+
+public:
+    // Конструктор за замовчуванням
+    Ride() : SingleRideQ(nullptr), RegularRideQ(nullptr) {}
+
+    // Конструктор із параметрами
+    Ride(Attraction attraction, Queue& singleQueue, Queue& regularQueue)
+        : currentAttraction(attraction), SingleRideQ(&singleQueue), RegularRideQ(&regularQueue) {}
+
+    // Метод для встановлення значень
+    void setcurrentAttraction(Attraction attraction, Queue& singleQueue, Queue& regularQueue) {
+        currentAttraction = attraction;
+        SingleRideQ = &singleQueue;
+        RegularRideQ = &regularQueue;
+    }
+
     void Behavior() {
         while (true) {
-            // printf("3  length %d\n", RideQ.Length());
+            // if(case1){
+            // printf("case 1 entered ride  length single %d, regular %d\n", SingleRideQ->Length(), RegularRideQ->Length());
 
-            if ((SingleRideQ1.Length()+RegularRideQ1.Length()) < RIDE_CAPACITY) {
+            // }else{
+            // printf("case 0 entered ride  length single %d, regular %d\n", SingleRideQ->Length(), RegularRideQ->Length());
+
+            // }
+            // if (SingleRideQ) {
+            //     printf("SingleRideQ length: %d, empty: %d\n", SingleRideQ->Length(), SingleRideQ->empty());
+            // } else {
+            //     printf("SingleRideQ is null.\n");
+            // }
+            //change this? delete ? 
+            if ((SingleRideQ->Length()+RegularRideQ->Length()) < RIDE_CAPACITY) {
 
                 Passivate(); // Wait until enough people are in the queue
 
             }
-            printf("5.2 queue length %d\n", RideQ.Length() );
+            if(!currentAttraction.single_rider){
+                if(SingleRideQ->Length() != 0){
+                // printf("without single rider the length must be 0 : %d . ID of the ride %d\n" , SingleRideQ->Length(), currentAttraction.id);
+                    
+                }
+            }
+           // printf("5.2 queue length %d\n", RideQ.Length() );
             // Load passengers (up to RIDE_CAPACITY)
             int capacity = 4; //change later
             int regular = 0;
             int single = 0;
             int row_start = 0;
-            Entity *riders_in_cabin[RIDE_CAPACITY];
+            int row_end = 0;
+            
+            std::vector<Entity*> riders_in_cabin;   
+            
             for (int row_start=0; row_start<RIDE_CAPACITY; ){
-                if (!(SingleRideQ1.empty() && RegularRideQ1.empty())){
-                    
+                if (!SingleRideQ->empty() || !RegularRideQ->empty()){
                     regular = (int)Uniform(1,capacity+1);
                     single = capacity-regular;
                 }
 
-                if (RegularRideQ1.Length() < regular){
-                    regular = RegularRideQ1.Length();
+                if (RegularRideQ->Length() < regular){
+                    regular = RegularRideQ->Length();
                 }
-                if (SingleRideQ1.Length() < capacity-regular){
-                    single = SingleRideQ1.Length();
+                if (SingleRideQ->Length() < capacity-regular){
+                    single = SingleRideQ->Length();
+
                 }else {
                     ///
+                    single = capacity-regular;
+
+                    // printf("entered else in ride, single is %d and lendtht %d\n", single, SingleRideQ->Length());
                 }
 
                 for (int i = row_start; i < row_start+regular; i++){
-                riders_in_cabin[i] = RegularRideQ1.GetFirst();
+                    //  printf("    2.0 reqular length %d ; start %d , end %d\n", regular ,row_start,  row_start+regular);
+
+                    riders_in_cabin.push_back(RegularRideQ->GetFirst());
+                row_end++;
                 }
+
                 for (int i = row_start+regular; i < row_start+regular+single; i++){
-                riders_in_cabin[i] = SingleRideQ1.GetFirst();
+                    // printf("    2 single length %d ; start %d , end %d\n", single ,row_start+regular,  row_start+regular+single);
+
+
+                    riders_in_cabin.push_back(SingleRideQ->GetFirst());
+                row_end++;
                 }
                 //Wait(10);//time for posadka
                 
                 row_start+=4;
+                
+            }
+                    // printf("    5 row end %d\n", row_end);
+            
+// printf("Number of riders: %zu\n", riders_in_cabin.size());
+
+            for (auto& rider : riders_in_cabin) {
+                rider->Activate();
             }
 
-            for (int i = 0; i < regular+single; i++){
-                riders_in_cabin[i]->Activate();
-            }
+                    
 
-            Wait(120); // Ride lasts for 2 minutes
+            Wait(300); // Ride lasts for 5 minutes
 
             // Ride completes, all riders are done
-            //  Print("Атракціон завершився, перевезено %d пасажирів на час %.2f\n", RIDE_CAPACITY, Time);
-       
+             Print("Атракціон завершився, перевезено %d пасажирів на час %.2f\n",row_end, Time);
+       riders_in_cabin.clear();
+
+
+
+
+
+
 
             // If there's still a queue, immediately reactivate
             // if (RideQ.Length() >= RIDE_CAPACITY) {
@@ -67,36 +130,17 @@ class Ride : public Process {
 
 
 Ride* ptr;
+Ride* ptr2;
 
 
-// Структура для зберігання даних про атракціон
-struct Attraction {
-    int id;                 // ID атракціону
-    int popularity;
-    bool isForAdults;       // Чи є обмеження для дорослих
-    bool single_rider;
-    int capacity;           // Вмісткість
-    int people_in_row;
-    double rideDuration;    // Тривалість проходження атракціону
-};
 
-std::vector<Attraction> attractions = {
-    {0, 2,false,false, 20, 4, 5}, // Flying Carpets
-    {1, 1,true,true, 20, 4, 7} // Turtle Coaster
-    // {2, 2,true,true, 36, 6, 5}, // Toy Soldier
-    // {3, 3,false,false, 28, 2, 5}, // Dog ZigZag
-    // {4, 1,false,true, 24, 4, 7}, // Ratatouille
-    // {5, 2,true,true, 20, 4, 5}, //  RC  Racer
-    // {6, 3,false,false, 20, 2, 5}, // Cars Road Trip
-    // {7, 1,true,false, 21, 21, 5}, // Tower Terror
-    // {8, 2,false,true, 20, 4, 5}, // Spider Man
-    // {9, 2,true, true,24, 2, 5} // Avengers
-};
+
 
 
 class Person : public Process{
     bool singleRider;
     int chosenAttraction;
+    Attraction current_attraction; 
 
     void Behavior() {
         int free_entr = -1;
@@ -130,15 +174,63 @@ class Person : public Process{
         chosenAttraction = -1;
         while( Time < ClOSE_TIME - 10*60){
             chosenAttraction = chooseAttraction(isAdult,chosenAttraction);
+            
+
             switch (chosenAttraction) {
                 case 0:
+                    case1 = false ;
                     // Choose between single ride
                     income(5); // ticket price = 5 $
-                    go_to_attraction(SingleRideQ1, RegularRideQ1);
+                  
+                    go_to_attraction(SingleRideZero, RegularRideQ1);
+                    // printf("3 SimgleQ : %d, RegularQ : %d\n", SingleRideZero.Length() , RegularRideQ1.Length());
+
+                    if ((SingleRideZero.Length()+RegularRideQ1.Length()) >= RIDE_CAPACITY) {
+
+                        ptr->setcurrentAttraction(current_attraction, SingleRideZero, RegularRideQ1);
+                        ptr->Activate(); // Активуємо атракціон, якщо черга наповнена
+
+                    } 
+                    Passivate(); // Чекаємо, поки атракціон активує
+                    Wait(current_attraction.rideDuration); 
+
                 case 1:
+                    case1 = true;
                     // Choose between single rider
                     income(5); // ticket price = 5 $
+                    // printf("----------5---------\n");
+
                     go_to_attraction(SingleRideQ2, RegularRideQ2);
+                    // printf("6 SimgleQ : %d, RegularQ : %d\n", SingleRideQ2.Length() , RegularRideQ2.Length());
+
+                    if ((SingleRideQ2.Length()+RegularRideQ2.Length()) >= RIDE_CAPACITY) {
+                    // printf("7\n");
+
+                        ptr2->setcurrentAttraction(current_attraction, SingleRideQ2, RegularRideQ2);
+                        ptr2->Activate(); // Активуємо атракціон, якщо черга наповнена
+                    // printf("----------5---------\n");
+
+                    } 
+                    Passivate(); // Чекаємо, поки атракціон активує
+                    Wait(current_attraction.rideDuration); 
+                case 2:
+                    income(5);
+
+                    // go_to_attraction(SingleRideQ3, RegularRideQ3);
+                    go_to_attraction(SingleRideZero, RegularRideQ3);
+
+
+                    // if ((SingleRideQ3.Length()+RegularRideQ3.Length()) >= RIDE_CAPACITY) {
+                    if ((SingleRideZero.Length()+RegularRideQ3.Length()) >= RIDE_CAPACITY) {
+
+
+                        // ptr2->setcurrentAttraction(current_attraction, SingleRideQ3, RegularRideQ3);
+                        ptr2->setcurrentAttraction(current_attraction, SingleRideZero, RegularRideQ3);
+
+                        ptr2->Activate(); 
+                    } 
+                    Passivate(); 
+                    Wait(current_attraction.rideDuration); 
                 default:
                     break;
             }
@@ -151,23 +243,21 @@ class Person : public Process{
     
     void go_to_attraction(Queue &SingleRideQ, Queue &RegularRideQ){
         // if (this->rideissingle = true)
-        double singleRider = Random();
-        if (singleRider <= 0.5) {
-            this->singleRider = true;
-            Into(SingleRideQ);
-        }else {
+        if(current_attraction.single_rider){
+            
+            double singleRider = Random();
+            if (singleRider <= 0.5) {
+                this->singleRider = true;
+                Into(SingleRideQ);
+            }else {
+                this->singleRider = false;
+                Into(RegularRideQ);
+            }
+        }else{
             this->singleRider = false;
+
             Into(RegularRideQ);
         }
-
-        if ((SingleRideQ.Length()+RegularRideQ.Length()) >= RIDE_CAPACITY) {
-            ptr->Activate(); // Активуємо атракціон, якщо черга наповнена
-        } 
-        // else {
-            Passivate(); // Чекаємо, поки атракціон активує
-            Wait(120); // Ride lasts for 2 minutes this->ride->time
-
-        // }
 
     }
    
@@ -217,9 +307,9 @@ class Person : public Process{
                 case 1:
                     queueSizeR = RegularRideQ2.Length();
                     break;
-                // case 2:
-                //     // queueSize = Carpet.Length();
-                //     break;
+                case 2:
+                    queueSizeR = RegularRideQ3.Length();
+                    break;
                 // case 3:
                 //     // queueSize = Carpet.Length();
                 //     break;
@@ -257,42 +347,12 @@ class Person : public Process{
                 chosenAttraction = attraction.id;
             }
         }
-
+        current_attraction = attractions[chosenAttraction];
         return chosenAttraction;
     }
 };
 
-// void Board::start_boarding() {
-//     int capacity = 4; //change later
-//     int regular = 0;
-//     int single = 0;
-//     int row_start = 0;
-//     Entity *riders_in_cabin[Ride1AMOUNT];
-//     for (int row_start=0; row_start<Ride1AMOUNT; ){
-//         if (!(SingleRideQ.empty() && RegularQ.empty())){
-            
-//             regular = (int)Uniform(1,capacity+1);
-//             single = capacity-regular;
-//         }
 
-//         if (RegularQ.Length() < regular){
-//             regular = RegularQ.Length();
-//         } 
-//         if (SingleRideQ.Length() < capacity-regular){
-//             single = SingleRideQ.Length();
-//         }
-
-//         for (int i = row_start; i < row_start+regular; i++){
-//         riders_in_cabin[i] = RegularQ.GetFirst();
-//         }
-//         Wait(10);
-//         for (int i = row_start+regular; i < row_start+regular+single; i++){
-//         riders_in_cabin[i]->Activate();
-//         }
-//         row_start+=4;
-//     }
-
-// }
 
 
 class Generator : public Event {
@@ -328,9 +388,26 @@ int main(int argc , char **argv)
         return 1;
     }
 
-    Init(0, 20000);
+    Init(0, 12000);
     ptr = new Ride;
-    ptr->Activate();
+    //ptr->Activate();
+
+    ptr2 = new Ride;
+    //ptr2->Activate();
+
+    // Attraction attraction = {1, 2, false, true, 20, 4, 7};
+    // Queue singleQueue;
+    // Queue regularQueue;
+
+    // // Використання конструктора з параметрами
+    // Ride ptr(attraction, singleQueue, regularQueue);
+    // ptr.Behavior();
+
+    // // Або через метод
+    // Ride ptr2;
+    // ptr2.setcurrentAttraction(attraction, singleQueue, regularQueue);
+    // ptr2.Behavior();
+
     // Init(0, ClOSE_TIME);
     (new Generator(people_count))->Activate();
      
@@ -338,9 +415,15 @@ int main(int argc , char **argv)
     Run();
 
     EntranceQ.Output();
-    RideQ.Output();
-    SingleRideQ1.Output();
+    // RideQ.Output();
+    SingleRideZero.Output();
     RegularRideQ1.Output();
+
+    SingleRideQ2.Output();
+    RegularRideQ2.Output();
+
+    SingleRideQ3.Output();
+    RegularRideQ3.Output();
     for(int i= 0; i<ENTRANCE; i++){
         EntranceL[i].Output();
         // EntranceL.Output();
