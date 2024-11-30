@@ -30,8 +30,8 @@ std::vector<Attraction> attractions = {
 ///id,popul,age,singl,capc,row,time
     {0, 2,false,false, 20, 4, 5}, // Flying Carpets
     {1, 1,true,true, 20, 4, 7}, // Turtle Coaster  //popular was 1
-    {2, 2,true,false, 36, 6, 5} // Toy Soldier   //single was true
-    // // {3, 3,false,false, 28, 2, 5}, // Dog ZigZag
+    {2, 2,true,true, 36, 6, 5}, // Toy Soldier   //single was true
+    {3, 3,false,false, 28, 2, 5} // Dog ZigZag
     // {4, 1,false,true, 24, 4, 7}, // Ratatouille
     // {5, 2,true,true, 20, 4, 5}, //  RC  Racer
     // {6, 3,false,false, 20, 2, 5}, // Cars Road Trip
@@ -45,14 +45,19 @@ Queue EntranceQ("Entrance Queue");
 Facility EntranceL[ENTRANCE]; 
 // Facility Ride1[Ride1AMOUNT]; 
 Queue SingleRideZero("Single empty  Ride Queue");
+
+Queue RegularRideQ0("Regular 0 Ride Queue");
+//Queue SingleRideQ0("Single 1 Ride Queue");
+
 Queue RegularRideQ1("Regular 1 Ride Queue");
-//Queue SingleRideQ1("Single 1 Ride Queue");
+Queue SingleRideQ1("Single 1 Ride Queue");
 
 Queue RegularRideQ2("Regular 2 Ride Queue");
 Queue SingleRideQ2("Single 2 Ride Queue");
 
 Queue RegularRideQ3("Regular 3 Ride Queue");
 Queue SingleRideQ3("Single 3 Ride Queue");
+
 
 Queue RideQ("Ride Queue");
 
