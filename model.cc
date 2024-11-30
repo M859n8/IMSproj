@@ -77,26 +77,30 @@ struct Attraction {
     bool single_rider;
     int capacity;           // Вмісткість
     int people_in_row;
-    double rideDuration;    // Тривалість проходження атракціону
+    int rideDuration;    // Тривалість проходження атракціону
+    int price;
 };
 
 std::vector<Attraction> attractions = {
-    {0, 2,false,false, 20, 4, 5}, // Flying Carpets
-    {1, 1,true,true, 20, 4, 7} // Turtle Coaster
-    // {2, 2,true,true, 36, 6, 5}, // Toy Soldier
-    // {3, 3,false,false, 28, 2, 5}, // Dog ZigZag
-    // {4, 1,false,true, 24, 4, 7}, // Ratatouille
-    // {5, 2,true,true, 20, 4, 5}, //  RC  Racer
-    // {6, 3,false,false, 20, 2, 5}, // Cars Road Trip
-    // {7, 1,true,false, 21, 21, 5}, // Tower Terror
-    // {8, 2,false,true, 20, 4, 5}, // Spider Man
-    // {9, 2,true, true,24, 2, 5} // Avengers
+    {0, 2,false,false, 20, 4, 5, 5}, // Flying Carpets 1
+    {1, 1,true,true, 20, 4, 7, 7} // Turtle Coaster 2
+    // {2, 2,true,true, 36, 6, 5}, // Toy Soldier 3
+    // {3, 3,false,false, 28, 2, 5}, // Dog ZigZag 4
+    // {4, 1,false,true, 24, 4, 7}, // Ratatouille 5
+    // {5, 2,true,true, 20, 4, 5}, //  RC  Racer 6
+    // {6, 3,false,false, 20, 2, 5}, // Cars Road Trip 7
+    // {7, 1,true,false, 21, 21, 5}, // Tower Terror 8
+    // {8, 2,false,true, 20, 4, 5}, // Spider Man 9
+    // {9, 2,true, true,24, 2, 5} // Avengers 10
 };
 
 
 class Person : public Process{
     bool singleRider;
-    int chosenAttraction;
+    int currentAttraction;
+    int waitTimeRegular; // time that visiter need to wait to chosen attraction in regular queue
+    Attraction current_attraction;
+
 
     void Behavior() {
         int free_entr = -1;
@@ -126,23 +130,61 @@ class Person : public Process{
 			(EntranceQ.GetFirst())->Activate();
 		}
 
-        bool isAdult = Random() > 0.6; // is Child
-        chosenAttraction = -1;
+        bool isAdult = Random() < 0.787; 
+        currentAttraction = -1;
         while( Time < ClOSE_TIME - 10*60){
-            chosenAttraction = chooseAttraction(isAdult,chosenAttraction);
-            switch (chosenAttraction) {
+            // currentAttraction = chooseAttraction(isAdult);
+            chooseAttraction(isAdult);
+            currentAttraction = current_attraction.id;
+            switch (current_attraction.id) {
                 case 0:
                     // Choose between single ride
-                    income(5); // ticket price = 5 $
+                    // printf("Attr 0: %d\n", attractions[current_attraction.id].id);
+                    income(attractions[0].price); // ticket price = 5 $
                     go_to_attraction(SingleRideQ1, RegularRideQ1);
+                    break;
                 case 1:
                     // Choose between single rider
-                    income(5); // ticket price = 5 $
+                    // printf("Attr 1: %d\n", attractions[current_attraction.id].id);
+                    income(attractions[1].price); 
                     go_to_attraction(SingleRideQ2, RegularRideQ2);
+                    break;
+                // case 2:
+                //     income(attractions[2].price); 
+                //     go_to_attraction(SingleRideQ3, RegularRideQ3);
+                //     break;
+                // case 3:
+                //     income(attractions[3].price); 
+                //     go_to_attraction(SingleRideQ4, RegularRideQ4);
+                //     break;
+                // case 4:
+                //     income(attractions[4].price); 
+                //     go_to_attraction(SingleRideQ5, RegularRideQ5);
+                //     break;
+                // case 5:
+                //     income(attractions[5].price); 
+                //     go_to_attraction(SingleRideQ6, RegularRideQ6);
+                //     break;
+                // case 6:
+                //     income(attractions[6].price); 
+                //     go_to_attraction(SingleRideQ7, RegularRideQ7);
+                //     break;
+                // case 7:
+                //     income(attractions[7].price); 
+                //     go_to_attraction(SingleRideQ8, RegularRideQ8);
+                //     break;
+                // case 8:
+                //     income(attractions[8].price); 
+                //     go_to_attraction(SingleRideQ9, RegularRideQ9);
+                //     break;
+                // case 9:
+                //     income(attractions[9].price); 
+                //     go_to_attraction(SingleRideQ10, RegularRideQ10);
+                //     break;
                 default:
                     break;
             }
-            if(Random() > 0.3){ // go to park
+            if(Random() < 0.3){ // go to park
                 Wait(Uniform(30 * 60, 60 * 60)); 
             }
         }
@@ -150,8 +192,24 @@ class Person : public Process{
     }
     
     void go_to_attraction(Queue &SingleRideQ, Queue &RegularRideQ){
-        // if (this->rideissingle = true)
         double singleRider = Random();
+        // if (attractions[currentAttraction].single_rider) {
+        //     if(waitTimeRegular > 60){     
+        //         this->singleRider = true;
+        //         Into(SingleRideQ);
+        //         goto wait;
+        //     }
+        //     if(singleRider <= 0.5){
+        //         this->singleRider = true;
+        //         Into(SingleRideQ);
+        //     } else {
+        //         this->singleRider = false;
+        //         Into(RegularRideQ);
+        //     }
+        // }else {
+        //     this->singleRider = false;
+        //     Into(RegularRideQ);
+        // }
         if (singleRider <= 0.5) {
             this->singleRider = true;
             Into(SingleRideQ);
@@ -159,7 +217,7 @@ class Person : public Process{
             this->singleRider = false;
             Into(RegularRideQ);
         }
-
+        // wait:
         if ((SingleRideQ.Length()+RegularRideQ.Length()) >= RIDE_CAPACITY) {
             ptr->Activate(); // Активуємо атракціон, якщо черга наповнена
         } 
@@ -171,17 +229,17 @@ class Person : public Process{
 
     }
    
-    double calculateAttractionScore(int distance, double waitTime, int popularity) {
+    double calculateAttractionScore(int distance, int waitTime, int popularity) {
         const double weightPopularity = 3.0;
         const double weightDistance = 1.0;
         const double weightWaitTime = 2.0;
 
-        return weightPopularity / popularity + 
+        return weightPopularity / (popularity +1)+ 
             weightDistance / (distance + 1) + 
             weightWaitTime / (waitTime + 1) ;
     }
 
-    int calculateDistance(int currentAttraction, int targetAttraction) {
+    int calculateDistance(int targetAttraction) {
         if(currentAttraction == -1){
             return targetAttraction +1;
         }
@@ -202,7 +260,7 @@ class Person : public Process{
             return std::abs(currentAttraction - targetAttraction);
         }
     }
-    int chooseAttraction(bool isAdult,int currentAttraction) {
+    void chooseAttraction(bool isAdult) {
         int chosenAttraction = -1; // ID обраного атракціону
         double maxScore = -1;
 
@@ -218,47 +276,47 @@ class Person : public Process{
                     queueSizeR = RegularRideQ2.Length();
                     break;
                 // case 2:
-                //     // queueSize = Carpet.Length();
+                //    queueSizeR = RegularRideQ3.Length();
                 //     break;
                 // case 3:
-                //     // queueSize = Carpet.Length();
+                //     queueSizeR = RegularRideQ4.Length();
                 //     break;
                 // case 4:
-                //     // queueSize = Carpet.Length();
+                //     queueSizeR = RegularRideQ5.Length();
                 //     break;
                 // case 5:
-                //     // queueSize = Carpet.Length();
+                //     queueSizeR = RegularRideQ6.Length();
                 //     break;
                 // case 6:
-                //     // queueSize = Carpet.Length();
+                //     queueSizeR = RegularRideQ7.Length();
                 //     break;
                 // case 7:
-                //     // queueSize = Carpet.Length();
+                //     queueSizeR = RegularRideQ8.Length();
                 //     break;
                 // case 8:
-                //     // queueSize = Carpet.Length();
+                //     queueSizeR = RegularRideQ9.Length();
                 //     break;
                 // case 9:
-                //     // queueSize = Carpet.Length();
+                //     queueSizeR = RegularRideQ10.Length();
                 //     break;
                 default:
                     break;
             } 
             // Розрахунок часу чекання
-            double WaitTimeR = (static_cast<double>(queueSizeR) / attraction.capacity) * attraction.rideDuration;
-
+            int WaitTimeR = static_cast<int>(queueSizeR / attraction.capacity) * attraction.rideDuration;
             // Розрахунок відстані з урахуванням категорій доріг
-            int distance = calculateDistance(currentAttraction, attraction.id);
+            int distance = calculateDistance(attraction.id);
 
             double score = calculateAttractionScore(distance, WaitTimeR, attraction.popularity);
 
             if (score > maxScore) {
                 maxScore = score;
                 chosenAttraction = attraction.id;
+                waitTimeRegular = WaitTimeR;
             }
         }
-
-        return chosenAttraction;
+        current_attraction = attractions[chosenAttraction];
+        // return chosenAttraction;
     }
 };
 
@@ -341,6 +399,9 @@ int main(int argc , char **argv)
     RideQ.Output();
     SingleRideQ1.Output();
     RegularRideQ1.Output();
+    SingleRideQ2.Output();
+    RegularRideQ2.Output();
+    income.Output();
     for(int i= 0; i<ENTRANCE; i++){
         EntranceL[i].Output();
         // EntranceL.Output();
