@@ -5,12 +5,12 @@
 #include <cmath>
 #include <algorithm>
 #include <limits>
+#include <map>
+#include <iostream>
 
-const int HIGH_AMOUNT = 5000; //was 7000
-const int SUPERHIGH_AMOUNT = 75;
-const int MIDDLE_AMOUNT = 50;
-const int LOW_AMOUNT = 40;
 #define ENTRANCE 30//was 30
+#define DAY_TICKET_PRICE 135
+
 
 float timeInQueue = 0;
 int AttractionsCount = 0; //test only
@@ -40,6 +40,15 @@ std::vector<Attraction> attractions = {
     {8, 2,false,true, 20, 4, 5*60, 16}, // Spider Man 9
     {9, 2,true, true,24, 2, 5*60, 12} // Avengers 10
 };
+
+
+std::map<std::string, int> seasonSettings = {
+    {"spring", 7000},
+    {"summer", 7500}, 
+    {"autumn", 5000}, 
+    {"winter", 4500}   
+};
+
 
 
 Queue EntranceQ("Entrance Queue");
@@ -90,7 +99,7 @@ Stat income9("Income from ticket pay attraction 9");
 Stat AttractionsAmount("Amount of attractions per person");
 
 
-const double ClOSE_TIME = 43000;
+const double ClOSE_TIME = 43000; //~12h
 
 // class Board: public Process {
 // public:

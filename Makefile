@@ -16,4 +16,4 @@ clean:
 run: 
 	make clean
 	make
-	./$(TARGET) summer
+	./$(TARGET) winter

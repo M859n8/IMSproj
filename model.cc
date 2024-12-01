@@ -120,7 +120,7 @@ class Person : public Process{
     // int AttractionsCount;
 
     void Behavior() {
-        double arrival = Normal(2.0 * 3600.0, 2.0 * 3600.0);
+        double arrival = Normal(1.5 * 3600.0, 0.5 * 3600.0);
         if (arrival <= 0) {
             arrival = 1; // Мінімальне значення для уникнення помилки
         }
@@ -160,7 +160,7 @@ class Person : public Process{
         
 
         bool isAdult = Random() < 0.787;
-        AttractionsCount = 0; //TEST ONLY MAYBE DO NOT NEED THIS 
+        //AttractionsCount = 0; //TEST ONLY MAYBE DO NOT NEED THIS 
         currentAttraction = -1;
         while( Time < ClOSE_TIME-10*60){
             chooseAttraction(isAdult);
@@ -540,24 +540,48 @@ public:
     }
 };
 
-Closing* closeTimeProc;
+void updatePrices(int priceChange) {
+    for (auto& attraction : attractions) {
+        attraction.price += priceChange;
+    }
+}
 
 int main(int argc , char **argv)
 {
     int people_count;
-    int basicPrice = 90;
-    if (argc < 2) {
-        // printf("Error: Missing argument for season (summer or winter)\n");
+    int basicPrice = DAY_TICKET_PRICE; //price is taken from disneyland official website
+     if (argc < 2) {
+        std::cerr << "Usage: " << argv[0] << " <season> [+/- priceChange]\n";
+        std::cerr << "Season must be one of: spring, summer, autumn, winter.\n";
         return 1;
     }
 
-    if (strcmp(argv[1], "summer") == 0) {
-        people_count = HIGH_AMOUNT;
-    } else if (strcmp(argv[1], "winter") == 0) {
-        people_count = LOW_AMOUNT;
-    } else {
-        // printf("Error: Invalid season argument\n");
+    std::string season = argv[1];
+    if (seasonSettings.find(season) == seasonSettings.end()) {
+        std::cerr << "Error: Invalid season. Choose from spring, summer, autumn, winter.\n";
         return 1;
+    }
+    people_count = seasonSettings[season];
+
+    int priceChange = 0;
+    // Обробка аргументу зміни ціни
+    if (argc == 3) {
+        std::string priceChangeArg = argv[2];
+        if (priceChangeArg[0] == '+' || priceChangeArg[0] == '-') {
+            try {
+                priceChange = std::stoi(priceChangeArg);
+            } catch (const std::invalid_argument&) {
+                std::cerr << "Error: Invalid price change value. Must be in the format +N or -N.\n";
+                return 1;
+            }
+        } else {
+            std::cerr << "Error: Invalid price change format. Must start with '+' or '-'.\n";
+            return 1;
+        }
+    }
+
+    if (priceChange != 0) {
+        updatePrices(priceChange);
     }
 
     Init(0,ClOSE_TIME);
@@ -572,23 +596,9 @@ int main(int argc , char **argv)
     ptr8 = new Ride;
     ptr9 = new Ride;
 
-    closeTimeProc = new Closing();
+    Closing* closeTimeProc = new Closing();
     closeTimeProc->Activate(Time + (ClOSE_TIME - 10*60));
 
-    // Attraction attraction = {1, 2, false, true, 20, 4, 7};
-    // Queue singleQueue;
-    // Queue regularQueue;
-
-    // // Використання конструктора з параметрами
-    // Ride ptr(attraction, singleQueue, regularQueue);
-    // ptr.Behavior();
-
-    // // Або через метод
-    // Ride ptr2;
-    // ptr2.setcurrentAttraction(attraction, singleQueue, regularQueue);
-    // ptr2.Behavior();
-
-    // Init(0, ClOSE_TIME);
     (new Generator(people_count))->Activate();
      
 
@@ -642,13 +652,17 @@ int main(int argc , char **argv)
     income7.Output();
     income8.Output();
     income9.Output();
-    printf("Basic income from that day: %d\n",people_count*basicPrice );
+    printf("+----------------------------------------------------------+\n");
+    printf("    Basic income from people that day: %d\n", people_count*basicPrice );
+    printf("    Income from all rides with a set price : %0.2f\n", income0.Sum()+income1.Sum()+income2.Sum()+
+    income3.Sum()+income4.Sum()+income5.Sum()+income6.Sum()+income7.Sum()+income8.Sum()+income9.Sum());
+    printf("+----------------------------------------------------------+\n");
 
     AttractionsAmount.Output();
 
     
-    printf("time in queue %0.2f, time per person %0.2f\n", timeInQueue, timeInQueue/HIGH_AMOUNT);
-    printf("amount of attractions %d,  per person  %d\n", AttractionsCount, AttractionsCount/HIGH_AMOUNT);
+    printf("time in queue %0.2f, time per person %0.2f\n", timeInQueue, timeInQueue/people_count);
+    printf("amount of attractions %d,  per person  %d\n", AttractionsCount, AttractionsCount/people_count);
     
 
     // for(int i= 0; i<Ride1AMOUNT; i++){
