@@ -176,10 +176,17 @@ class Person : public Process{
     Attraction current_attraction;
     int distanceToNext; // distance to the next attraction
     std::vector<bool> visitedAttractions;
+    int AttractionsCount;
 
     void Behavior() {
         // Wait(Normal(3600,  14400));  // Car waiting to arrive between cca 7:45 and 12:00
-        Wait(Uniform(1800, 14400));
+        // Wait(Uniform(1800, 14400));
+        double arrival = Normal(2.0 * 3600.0, 2.0 * 3600.0);
+        if (arrival <= 0) {
+            arrival = 1; // Мінімальне значення для уникнення помилки
+        }
+        Wait(arrival);
+
 
         if (visitedAttractions.empty()) {
             // Ініціалізуємо вектор лише один раз
@@ -213,9 +220,10 @@ class Person : public Process{
 		}
         
 
-        bool isAdult = Random() < 0.787; 
+        bool isAdult = Random() < 0.787;
+        AttractionsCount = 0; 
         currentAttraction = -1;
-        while( Time < ClOSE_TIME){
+        while( Time < ClOSE_TIME-10*60){
             if(Time > ClOSE_TIME-20*60){
                 closing_soon = true;
                 goto closing0;
@@ -227,7 +235,13 @@ class Person : public Process{
             }
             // printf("Distance : %d\n", distanceToNext);
             if(distanceToNext != 0){
-                Wait(distanceToNext*5*60);
+                double speed = Normal(210.0, 90.0);
+                if (speed <= 0) {
+                    speed = 1; // Мінімальне значення для уникнення помилки
+                }
+                // Wait(distanceToNext*5*60);
+
+              
             }
             // currentAttraction = current_attraction.id;
             switch (current_attraction.id) {
@@ -260,10 +274,14 @@ class Person : public Process{
                     }
                     Passivate(); // Чекаємо, поки атракціон активує
                     // Wait(current_attraction.rideDuration); 
+                    AttractionsCount++;
+
                     break;
 
                 case 1:
                     income(current_attraction.price); 
+                    
+
                     go_to_attraction(SingleRideQ1, RegularRideQ1);
                     if ((SingleRideQ1.Length()+RegularRideQ1.Length()) >= current_attraction.capacity) {
                         ptr1->setcurrentAttraction(current_attraction, SingleRideQ1, RegularRideQ1);
@@ -273,10 +291,14 @@ class Person : public Process{
                         ptr1->closingSoon(current_attraction, SingleRideQ1, RegularRideQ1);
                         goto closing2;
                     }
-                    Passivate(); 
+                    Passivate();
+                    AttractionsCount++;
+
                     break;
                 case 2:
                     income(current_attraction.price);
+                    
+
                     go_to_attraction(SingleRideQ2, RegularRideQ2);
                     if ((SingleRideQ2.Length()+RegularRideQ2.Length()) >=current_attraction.capacity) {
                         ptr2->setcurrentAttraction(current_attraction, SingleRideQ2, RegularRideQ2);
@@ -287,6 +309,8 @@ class Person : public Process{
                         goto closing3;
                     }
                     Passivate(); 
+                    AttractionsCount++;
+
                     break;
                 case 3:
                     income(current_attraction.price); 
@@ -300,7 +324,9 @@ class Person : public Process{
                         goto closing4;
                     }
                     Passivate(); 
-                    // Wait(current_attraction.rideDuration); 
+                    // Wait(current_attraction.rideDuration);
+                    AttractionsCount++;
+
                     break;
                 case 4:
                     income(current_attraction.price);
@@ -315,6 +341,8 @@ class Person : public Process{
                         goto closing5;
                     }
                     Passivate(); 
+                    AttractionsCount++;
+
                     break;
                 case 5:
                     income(current_attraction.price);
@@ -329,6 +357,8 @@ class Person : public Process{
                         goto closing6;
                     }
                     Passivate(); 
+                    AttractionsCount++;
+
                     break;
                 case 6:
                     income(current_attraction.price);
@@ -343,6 +373,8 @@ class Person : public Process{
                         goto closing7;
                     }
                     Passivate(); 
+                    AttractionsCount++;
+
                     break;
                 case 7:
                     income(current_attraction.price);
@@ -357,6 +389,8 @@ class Person : public Process{
                         goto closing8;
                     }
                     Passivate(); 
+                    AttractionsCount++;
+
                     break;
                 case 8:
                     income(current_attraction.price);
@@ -371,6 +405,8 @@ class Person : public Process{
                         goto closing9;
                     }
                     Passivate(); 
+                    AttractionsCount++;
+
                     break;
                 case 9:
                     income(current_attraction.price);
@@ -383,6 +419,8 @@ class Person : public Process{
                         ptr2->closingSoon(current_attraction, SingleRideQ9, RegularRideQ9);
                     }
                     Passivate(); 
+                    AttractionsCount++;
+
                     break;
                 
                 default:
@@ -395,7 +433,10 @@ class Person : public Process{
                 // printf("go to park\n");
                 Wait(Uniform(20 * 60, 40 * 60)); 
             }
+        // AttractionsAmount(AttractionsCount);
+
         }
+        AttractionsAmount(AttractionsCount);
 
     }
     
@@ -637,6 +678,8 @@ int main(int argc , char **argv)
 
     // }
     income.Output();
+    AttractionsAmount.Output();
+    
     // for(int i= 0; i<Ride1AMOUNT; i++){
     // Ride1[i].Output();
     // }

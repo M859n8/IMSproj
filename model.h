@@ -83,6 +83,7 @@ Queue SingleRideQ9("Single 9 Ride Queue");
 
 
 Stat income("Income from ticket pay");
+Stat AttractionsAmount("Amount of attractions per person");
 
 const double ClOSE_TIME = 43000;
 
