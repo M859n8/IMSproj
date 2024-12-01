@@ -126,10 +126,15 @@ Ride* ptr3;
 class Person : public Process{
     bool singleRider;
     int currentAttraction;
-    int waitTimeRegular; // time that visiter need to wait to chosen attraction in regular queue
     Attraction current_attraction;
+    int distanceToNext; // distance to the next attraction
+    std::vector<bool> visitedAttractions;
 
     void Behavior() {
+        if (visitedAttractions.empty()) {
+            // Ініціалізуємо вектор лише один раз
+            visitedAttractions = std::vector<bool>(10, false);
+        }
         int free_entr = -1;
         back:
 
@@ -163,6 +168,10 @@ class Person : public Process{
         while( Time < ClOSE_TIME - 10*60){
             // currentAttraction = chooseAttraction(isAdult);
             chooseAttraction(isAdult);
+            // printf("Distance : %d\n", distanceToNext);
+            if(distanceToNext != 0){
+                Wait(distanceToNext*5*60);
+            }
             currentAttraction = current_attraction.id;
             switch (current_attraction.id) {
                 case 0:
@@ -245,8 +254,9 @@ class Person : public Process{
                 default:
                     break;
             }
+            visitedAttractions[current_attraction.id] = true;
             if(Random() < 0.3){ // go to park
-                Wait(Uniform(30 * 60, 60 * 60)); 
+                Wait(Uniform(20 * 60, 40 * 60)); 
             }
         }
 
@@ -273,19 +283,25 @@ class Person : public Process{
 
     }
    
-    double calculateAttractionScore(int distance, int waitTime, int popularity) {
+    double calculateAttractionScore(int distance, int waitTime, int popularity, bool visited) {
         const double weightPopularity = 3.0;
         const double weightDistance = 1.0;
         const double weightWaitTime = 2.0;
+        const double weightVisited = 5.0;
 
-        return weightPopularity / (popularity +1)+ 
-            weightDistance / (distance + 1) + 
-            weightWaitTime / (waitTime + 1) ;
+        double score = weightPopularity / (popularity +1)+ 
+                            weightDistance / (distance + 1) + 
+                            weightWaitTime / (waitTime + 1) ;
+        if (!visited) {
+            score += weightVisited;
+        }
+
+        return score;
     }
 
     int calculateDistance(int targetAttraction) { 
         if(currentAttraction == -1){ 
-            return targetAttraction +1; 
+            return (targetAttraction+1); 
         } 
         // Категорії доріг 
         bool isCurrentOnRoad1 = (currentAttraction >= 0 && currentAttraction <= 6); 
@@ -352,12 +368,12 @@ class Person : public Process{
             // Розрахунок відстані з урахуванням категорій доріг 
             int distance = calculateDistance(attraction.id); 
 
-            double score = calculateAttractionScore(distance, WaitTimeR, attraction.popularity);
+            double score = calculateAttractionScore(distance, WaitTimeR, attraction.popularity, visitedAttractions[attraction.id]);
 
             if (score > maxScore) {
                 maxScore = score;
                 chosenAttraction = attraction.id;
-                waitTimeRegular = WaitTimeR;
+                distanceToNext = distance;
             }
         }
         current_attraction = attractions[chosenAttraction];
