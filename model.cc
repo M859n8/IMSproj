@@ -172,12 +172,19 @@ Ride* ptr9;
 class Person : public Process{
     bool singleRider;
     int currentAttraction;
-    int waitTimeRegular; // time that visiter need to wait to chosen attraction in regular queue
     bool closing_soon;
     Attraction current_attraction;
+    int distanceToNext; // distance to the next attraction
+    std::vector<bool> visitedAttractions;
 
     void Behavior() {
-        // Wait(Normal(3.5 * HR, 0.7 * HR));  // Car waiting to arrive between cca 7:45 and 12:00
+        // Wait(Normal(3600,  14400));  // Car waiting to arrive between cca 7:45 and 12:00
+        Wait(Uniform(1800, 14400));
+
+        if (visitedAttractions.empty()) {
+            // Ініціалізуємо вектор лише один раз
+            visitedAttractions = std::vector<bool>(10, false);
+        }
         int free_entr = -1;
         back:
 
@@ -215,7 +222,14 @@ class Person : public Process{
             }
             // currentAttraction = chooseAttraction(isAdult);
             chooseAttraction(isAdult);
-            currentAttraction = current_attraction.id;
+            if(currentAttraction == -1){
+                goto themePark;
+            }
+            // printf("Distance : %d\n", distanceToNext);
+            if(distanceToNext != 0){
+                Wait(distanceToNext*5*60);
+            }
+            // currentAttraction = current_attraction.id;
             switch (current_attraction.id) {
                 case 0:
                     // Choose between single ride
@@ -374,8 +388,12 @@ class Person : public Process{
                 default:
                     break;
             }
+            visitedAttractions[current_attraction.id] = true;
             if(Random() < 0.3){ // go to park
-                Wait(Uniform(30 * 60, 60 * 60)); 
+                themePark:
+                
+                // printf("go to park\n");
+                Wait(Uniform(20 * 60, 40 * 60)); 
             }
         }
 
@@ -402,19 +420,25 @@ class Person : public Process{
 
     }
    
-    double calculateAttractionScore(int distance, int waitTime, int popularity) {
+    double calculateAttractionScore(int distance, int waitTime, int popularity, bool visited) {
         const double weightPopularity = 3.0;
-        const double weightDistance = 1.0;
+        const double weightDistance = 0.5;
         const double weightWaitTime = 2.0;
+        const double weightVisited = 5.0; //maybe less
 
-        return weightPopularity / (popularity +1)+ 
-            weightDistance / (distance + 1) + 
-            weightWaitTime / (waitTime + 1) ;
+        double score = weightPopularity / (popularity )+ 
+                            weightDistance / (distance + 1) + 
+                            weightWaitTime / (waitTime/60 + 1) ;
+        if (!visited) {
+            score += weightVisited;
+        }
+
+        return score;
     }
 
     int calculateDistance(int targetAttraction) { 
         if(currentAttraction == -1){ 
-            return targetAttraction +1; 
+            return (targetAttraction+1); 
         } 
         // Категорії доріг 
         bool isCurrentOnRoad1 = (currentAttraction >= 0 && currentAttraction <= 6); 
@@ -441,6 +465,7 @@ class Person : public Process{
         for (const auto& attraction : attractions) { 
             // Фільтрація атракціонів за обмеженнями 
             if (!isAdult && attraction.isForAdults) continue; // Пропустити, якщо це дитина і атракціон тільки для дорослих 
+
             int queueSizeR; 
             switch (attraction.id) { 
                 case 0: 
@@ -478,18 +503,28 @@ class Person : public Process{
             }  
             // Розрахунок часу чекання 
             int WaitTimeR = static_cast<int>(queueSizeR / attraction.capacity) * attraction.rideDuration; 
+            if(WaitTimeR > 60*60){
+                printf("skip attraction");
+                continue;
+            }
             // Розрахунок відстані з урахуванням категорій доріг 
             int distance = calculateDistance(attraction.id); 
 
-            double score = calculateAttractionScore(distance, WaitTimeR, attraction.popularity);
+            double score = calculateAttractionScore(distance, WaitTimeR, attraction.popularity, visitedAttractions[attraction.id]);
 
             if (score > maxScore) {
                 maxScore = score;
                 chosenAttraction = attraction.id;
-                waitTimeRegular = WaitTimeR;
+                distanceToNext = distance;
             }
         }
-        current_attraction = attractions[chosenAttraction];
+        if(chosenAttraction == -1){
+            currentAttraction == -1;
+        }else{
+            current_attraction = attractions[chosenAttraction];
+
+            currentAttraction = chosenAttraction;
+        }
         // return chosenAttraction;
     }
 };
@@ -503,8 +538,11 @@ public:
             People_count = people_count;
     };
     void Behavior() { 
-        for(int i = 0 ; i <People_count; i++) { 
+        for(int i = 0 ; i <People_count; i++) {
+            // Wait(Uniform(1800, 14400));
+            // (new Person)->Activate(Time+Uniform(1800, 14400)); 
             (new Person)->Activate(); 
+
         } 
     }
     int People_count;
@@ -592,11 +630,13 @@ int main(int argc , char **argv)
 
 
 
-    // for(int i= 0; i<ENTRANCE; i++){
+    // for(int i= 0; i<ENTRANCE;){
     //     EntranceL[i].Output();
     //     // EntranceL.Output();
+    //     i+=3;
 
     // }
+    income.Output();
     // for(int i= 0; i<Ride1AMOUNT; i++){
     // Ride1[i].Output();
     // }

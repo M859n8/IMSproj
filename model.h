@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <limits>
 
-const int HIGH_AMOUNT = 503; //was 7000
+const int HIGH_AMOUNT = 5030; //was 7000
 const int SUPERHIGH_AMOUNT = 75;
 const int MIDDLE_AMOUNT = 50;
 const int LOW_AMOUNT = 40;
@@ -29,16 +29,16 @@ struct Attraction {
 
 std::vector<Attraction> attractions = {
 ///id,popul,age,singl,capc,row,time
-    {0, 2,false,false, 20, 4, 3000, 0}, // Flying Carpets 1
-    {1, 1,true,true, 20, 4, 3000, 21}, // Turtle Coaster 2
-    {2, 2,true,true, 36, 6, 3000, 0}, // Toy Soldier 3
-    {3, 3,false,false, 28, 2, 3000, 0}, // Dog ZigZag 4
-    {4, 1,false,true, 24, 4, 7, 14}, // Ratatouille 5
-    {5, 2,true,true, 20, 4, 5, 0}, //  RC  Racer 6
-    {6, 3,false,false, 20, 2, 5, 5}, // Cars Road Trip 7
-    {7, 1,true,false, 21, 21, 5, 14}, // Tower Terror 8
-    {8, 2,false,true, 20, 4, 5, 16}, // Spider Man 9
-    {9, 2,true, true,24, 2, 5, 12} // Avengers 10
+    {0, 2,false,false, 20, 4, 300, 5}, // Flying Carpets 1  //nopremieracc
+    {1, 1,true,true, 20, 4, 300, 21}, // Turtle Coaster 2
+    {2, 2,true,true, 36, 6, 300, 5}, // Toy Soldier 3  //nopremieracc
+    {3, 3,false,false, 28, 2, 300, 5}, // Dog ZigZag 4 //nopremieracc
+    {4, 1,false,true, 24, 4, 7*60, 14}, // Ratatouille 5
+    {5, 2,true,true, 20, 4, 5*60, 5}, //  RC  Racer 6 //nopremieracc
+    {6, 3,false,false, 20, 2, 5*60, 5}, // Cars Road Trip 7
+    {7, 1,true,false, 21, 21, 5*60, 14}, // Tower Terror 8
+    {8, 2,false,true, 20, 4, 5*60, 16}, // Spider Man 9
+    {9, 2,true, true,24, 2, 5*60, 12} // Avengers 10
 };
 
 
