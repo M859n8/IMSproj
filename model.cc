@@ -189,7 +189,7 @@ class Person : public Process{
 
             switch (current_attraction.id) {
                 case 0:
-                    income(current_attraction.price); 
+                    income0(current_attraction.price); 
                   
                     go_to_attraction(SingleRideZero, RegularRideQ0);
                     queueTime = Time;
@@ -207,8 +207,8 @@ class Person : public Process{
                     break;
 
                 case 1:
-                    income(current_attraction.price); 
-                    
+
+                    income1(current_attraction.price); 
 
                     go_to_attraction(SingleRideQ1, RegularRideQ1);
                     queueTime1 = Time;
@@ -225,8 +225,7 @@ class Person : public Process{
 
                     break;
                 case 2:
-                    income(current_attraction.price);
-                    
+                    income2(current_attraction.price);
 
                     go_to_attraction(SingleRideQ2, RegularRideQ2);
                     queueTime2 = Time;
@@ -243,7 +242,7 @@ class Person : public Process{
 
                     break;
                 case 3:
-                    income(current_attraction.price); 
+                    income3(current_attraction.price); 
                     go_to_attraction(SingleRideZero, RegularRideQ3);
                     queueTime3 = Time;
 
@@ -259,7 +258,7 @@ class Person : public Process{
 
                     break;
                 case 4:
-                    income(current_attraction.price);
+                    income4(current_attraction.price);
                     go_to_attraction(SingleRideQ4, RegularRideQ4);
                     queueTime4 = Time;
 
@@ -275,7 +274,7 @@ class Person : public Process{
 
                     break;
                 case 5:
-                    income(current_attraction.price);
+                    income5(current_attraction.price);
                     go_to_attraction(SingleRideQ5, RegularRideQ5);
                     queueTime5 = Time;
 
@@ -291,7 +290,7 @@ class Person : public Process{
 
                     break;
                 case 6:
-                    income(current_attraction.price);
+                    income6(current_attraction.price);
                     go_to_attraction(SingleRideZero, RegularRideQ6);
                     queueTime6 = Time;
 
@@ -307,7 +306,7 @@ class Person : public Process{
 
                     break;
                 case 7:
-                    income(current_attraction.price);
+                    income7(current_attraction.price);
                     go_to_attraction(SingleRideZero, RegularRideQ7);
                     queueTime7 = Time;
 
@@ -323,8 +322,7 @@ class Person : public Process{
 
                     break;
                 case 8:
-                    income(current_attraction.price);
-
+                    income8(current_attraction.price);
                     go_to_attraction(SingleRideQ8, RegularRideQ8);
                     queueTime8 = Time;
 
@@ -340,7 +338,7 @@ class Person : public Process{
 
                     break;
                 case 9:
-                    income(current_attraction.price);
+                    income9(current_attraction.price);
                     go_to_attraction(SingleRideQ9, RegularRideQ9);
                     queueTime9 = Time;
 
@@ -547,6 +545,7 @@ Closing* closeTimeProc;
 int main(int argc , char **argv)
 {
     int people_count;
+    int basicPrice = 90;
     if (argc < 2) {
         // printf("Error: Missing argument for season (summer or winter)\n");
         return 1;
@@ -632,13 +631,26 @@ int main(int argc , char **argv)
     //     i+=3;
 
     // }
-    income.Output();
+
+    income0.Output();
+    income1.Output();
+    income2.Output();
+    income3.Output();
+    income4.Output();
+    income5.Output();
+    income6.Output();
+    income7.Output();
+    income8.Output();
+    income9.Output();
+    printf("Basic income from that day: %d\n",people_count*basicPrice );
+
     AttractionsAmount.Output();
 
     
     printf("time in queue %0.2f, time per person %0.2f\n", timeInQueue, timeInQueue/HIGH_AMOUNT);
     printf("amount of attractions %d,  per person  %d\n", AttractionsCount, AttractionsCount/HIGH_AMOUNT);
     
+
     // for(int i= 0; i<Ride1AMOUNT; i++){
     // Ride1[i].Output();
     // }
