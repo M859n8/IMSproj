@@ -233,7 +233,7 @@ class Person : public Process{
             switch (current_attraction.id) {
                 case 0:
                     // Choose between single ride
-                    income(current_attraction.price); // ticket price = 5 $
+                    income0(current_attraction.price); // ticket price = 5 $
                   
                     go_to_attraction(SingleRideZero, RegularRideQ0);
                     // printf("3 SimgleQ : %d, RegularQ : %d\n", SingleRideZero.Length() , RegularRideQ0.Length());
@@ -263,7 +263,7 @@ class Person : public Process{
                     break;
 
                 case 1:
-                    income(current_attraction.price); 
+                    income1(current_attraction.price); 
                     go_to_attraction(SingleRideQ1, RegularRideQ1);
                     if ((SingleRideQ1.Length()+RegularRideQ1.Length()) >= current_attraction.capacity) {
                         ptr1->setcurrentAttraction(current_attraction, SingleRideQ1, RegularRideQ1);
@@ -276,7 +276,7 @@ class Person : public Process{
                     Passivate(); 
                     break;
                 case 2:
-                    income(current_attraction.price);
+                    income2(current_attraction.price);
                     go_to_attraction(SingleRideQ2, RegularRideQ2);
                     if ((SingleRideQ2.Length()+RegularRideQ2.Length()) >=current_attraction.capacity) {
                         ptr2->setcurrentAttraction(current_attraction, SingleRideQ2, RegularRideQ2);
@@ -289,7 +289,7 @@ class Person : public Process{
                     Passivate(); 
                     break;
                 case 3:
-                    income(current_attraction.price); 
+                    income3(current_attraction.price); 
                     go_to_attraction(SingleRideZero, RegularRideQ3);
                     if ((SingleRideZero.Length()+RegularRideQ3.Length()) >= current_attraction.capacity) {
                         ptr3->setcurrentAttraction(current_attraction, SingleRideZero, RegularRideQ3);
@@ -303,7 +303,7 @@ class Person : public Process{
                     // Wait(current_attraction.rideDuration); 
                     break;
                 case 4:
-                    income(current_attraction.price);
+                    income4(current_attraction.price);
                     go_to_attraction(SingleRideQ4, RegularRideQ4);
                     if ((SingleRideQ4.Length()+RegularRideQ4.Length()) >=current_attraction.capacity) {
                         ptr4->setcurrentAttraction(current_attraction, SingleRideQ4, RegularRideQ4);
@@ -317,7 +317,7 @@ class Person : public Process{
                     Passivate(); 
                     break;
                 case 5:
-                    income(current_attraction.price);
+                    income5(current_attraction.price);
                     go_to_attraction(SingleRideQ5, RegularRideQ5);
                     if ((SingleRideQ5.Length()+RegularRideQ5.Length()) >=current_attraction.capacity) {
                         ptr5->setcurrentAttraction(current_attraction, SingleRideQ5, RegularRideQ5);
@@ -331,7 +331,7 @@ class Person : public Process{
                     Passivate(); 
                     break;
                 case 6:
-                    income(current_attraction.price);
+                    income6(current_attraction.price);
                     go_to_attraction(SingleRideZero, RegularRideQ6);
                     if ((SingleRideZero.Length()+RegularRideQ6.Length()) >=current_attraction.capacity) {
                         ptr6->setcurrentAttraction(current_attraction, SingleRideZero, RegularRideQ6);
@@ -345,7 +345,7 @@ class Person : public Process{
                     Passivate(); 
                     break;
                 case 7:
-                    income(current_attraction.price);
+                    income7(current_attraction.price);
                     go_to_attraction(SingleRideZero, RegularRideQ7);
                     if ((SingleRideZero.Length()+RegularRideQ7.Length()) >=current_attraction.capacity) {
                         ptr7->setcurrentAttraction(current_attraction, SingleRideZero, RegularRideQ7);
@@ -359,7 +359,7 @@ class Person : public Process{
                     Passivate(); 
                     break;
                 case 8:
-                    income(current_attraction.price);
+                    income8(current_attraction.price);
                     go_to_attraction(SingleRideQ8, RegularRideQ8);
                     if ((SingleRideQ8.Length()+RegularRideQ8.Length()) >=current_attraction.capacity) {
                         ptr8->setcurrentAttraction(current_attraction, SingleRideQ8, RegularRideQ8);
@@ -373,7 +373,7 @@ class Person : public Process{
                     Passivate(); 
                     break;
                 case 9:
-                    income(current_attraction.price);
+                    income9(current_attraction.price);
                     go_to_attraction(SingleRideQ9, RegularRideQ9);
                     if ((SingleRideQ9.Length()+RegularRideQ9.Length()) >=current_attraction.capacity) {
                         ptr9->setcurrentAttraction(current_attraction, SingleRideQ9, RegularRideQ9);
@@ -504,7 +504,7 @@ class Person : public Process{
             // Розрахунок часу чекання 
             int WaitTimeR = static_cast<int>(queueSizeR / attraction.capacity) * attraction.rideDuration; 
             if(WaitTimeR > 60*60){
-                printf("skip attraction");
+                // printf("skip attraction");
                 continue;
             }
             // Розрахунок відстані з урахуванням категорій доріг 
@@ -554,6 +554,7 @@ public:
 int main(int argc , char **argv)
 {
     int people_count;
+    int basicPrice = 90;
     if (argc < 2) {
         // printf("Error: Missing argument for season (summer or winter)\n");
         return 1;
@@ -636,7 +637,17 @@ int main(int argc , char **argv)
     //     i+=3;
 
     // }
-    income.Output();
+    income0.Output();
+    income1.Output();
+    income2.Output();
+    income3.Output();
+    income4.Output();
+    income5.Output();
+    income6.Output();
+    income7.Output();
+    income8.Output();
+    income9.Output();
+    printf("Basic income from that day: %d\n",people_count*basicPrice );
     // for(int i= 0; i<Ride1AMOUNT; i++){
     // Ride1[i].Output();
     // }

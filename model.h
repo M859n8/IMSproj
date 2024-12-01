@@ -82,7 +82,16 @@ Queue SingleRideQ9("Single 9 Ride Queue");
 // Створення вектора черг
 
 
-Stat income("Income from ticket pay");
+Stat income0("Income from ticket pay attraction 0");
+Stat income1("Income from ticket pay attraction 1");
+Stat income2("Income from ticket pay attraction 2");
+Stat income3("Income from ticket pay attraction 3");
+Stat income4("Income from ticket pay attraction 4");
+Stat income5("Income from ticket pay attraction 5");
+Stat income6("Income from ticket pay attraction 6");
+Stat income7("Income from ticket pay attraction 7");
+Stat income8("Income from ticket pay attraction 8");
+Stat income9("Income from ticket pay attraction 9");
 
 const double ClOSE_TIME = 43000;
 
