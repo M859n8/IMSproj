@@ -6,14 +6,14 @@
 #include <algorithm>
 #include <limits>
 
-const int HIGH_AMOUNT = 5030; //was 7000
+const int HIGH_AMOUNT = 5000; //was 7000
 const int SUPERHIGH_AMOUNT = 75;
 const int MIDDLE_AMOUNT = 50;
 const int LOW_AMOUNT = 40;
 #define ENTRANCE 30//was 30
 
-// #define Ride1AMOUNT 10//was 30
-// #define RIDE_CAPACITY 20 //was 20
+float timeInQueue = 0;
+int AttractionsCount = 0; //test only
 
 // Структура для зберігання даних про атракціон
 struct Attraction {
@@ -28,7 +28,7 @@ struct Attraction {
 };
 
 std::vector<Attraction> attractions = {
-///id,popul,age,singl,capc,row,time
+///id,popul,age,singl,capc,row,time,price
     {0, 2,false,false, 20, 4, 300, 5}, // Flying Carpets 1  //nopremieracc
     {1, 1,true,true, 20, 4, 300, 21}, // Turtle Coaster 2
     {2, 2,true,true, 36, 6, 300, 5}, // Toy Soldier 3  //nopremieracc
@@ -44,11 +44,9 @@ std::vector<Attraction> attractions = {
 
 Queue EntranceQ("Entrance Queue");
 Facility EntranceL[ENTRANCE]; 
-// Facility Ride1[Ride1AMOUNT]; 
 Queue SingleRideZero("Single empty  Ride Queue");
 
 Queue RegularRideQ0("Regular 0 Ride Queue");
-//Queue SingleRideQ0("Single 1 Ride Queue");
 
 Queue RegularRideQ1("Regular 1 Ride Queue");
 Queue SingleRideQ1("Single 1 Ride Queue");
@@ -57,7 +55,6 @@ Queue RegularRideQ2("Regular 2 Ride Queue");
 Queue SingleRideQ2("Single 2 Ride Queue");
 
 Queue RegularRideQ3("Regular 3 Ride Queue");
-// Queue SingleRideQ3("Single 3 Ride Queue");
 
 Queue RegularRideQ4("Regular 4 Ride Queue");
 Queue SingleRideQ4("Single 4 Ride Queue");
@@ -66,10 +63,8 @@ Queue RegularRideQ5("Regular 5 Ride Queue");
 Queue SingleRideQ5("Single 5 Ride Queue");
 
 Queue RegularRideQ6("Regular 6 Ride Queue");
-// Queue SingleRideQ6("Single 6 Ride Queue");
 
 Queue RegularRideQ7("Regular 7 Ride Queue");
-// Queue SingleRideQ7("Single 7 Ride Queue");
 
 Queue RegularRideQ8("Regular 8 Ride Queue");
 Queue SingleRideQ8("Single 8 Ride Queue");
@@ -77,13 +72,11 @@ Queue SingleRideQ8("Single 8 Ride Queue");
 Queue RegularRideQ9("Regular 9 Ride Queue");
 Queue SingleRideQ9("Single 9 Ride Queue");
 
-// Queue RegularRideQ10("|Regular 10 Ride Queue");
-// Queue SingleRideQ10("Single 10 Ride Queue");
-// Створення вектора черг
+
 
 
 Stat income("Income from ticket pay");
-Stat AttractionsAmount("Amount of attractions per person");
+Stat AttractionsAmount("Amount of attractions foe everyone");
 
 const double ClOSE_TIME = 43000;
 
@@ -97,4 +90,3 @@ const double ClOSE_TIME = 43000;
 //     void Behavior();
 // }
 
-bool case1 ; //debug only 
