@@ -14,5 +14,6 @@ $(TARGET): $(SRCS)
 clean:
 	rm -f $(TARGET)
 run: 
+	make clean
 	make
 	./$(TARGET) summer
