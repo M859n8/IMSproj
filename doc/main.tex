@@ -117,7 +117,7 @@ Systém se skládá z následujících hlavních procesů: návštěvníci a atr
 
 Důležitý proces uzavírání atrakcí se aktivuje 10 minut před koncem provozní doby a umožní posledním návštěvníkům využít atrakce. Významnou součástí procesů jsou fronty: fronta na vstup a fronty na atrakce. Obsluha front probíhá na principu: kdo přijde první, je první obsloužen.
 
-\begin{algorithm}
+\begin{algorithm}[H]
 \caption{Algoritmus každého návštěvníka}
 \begin{algorithmic}[1]
     \State Postaví se do fronty u vstupních turniketů a poté projde jedním z nich.
@@ -154,10 +154,10 @@ V simulátoru jsou návštěvníci parku implementováni procesem `Person`. Tato
 
 Proces atrakce je implementován třídou `Ride`, která obsahuje:  
 
-\begin{enumerate}
+\begin{itemize}
     \item Funkci pro běžné chování atrakce.  
     \item Funkci \texttt{closingSoon()}, která umožňuje atrakci spustit pro poslední návštěvníky ve frontě, aniž by byla zcela naplněna.  
-\end{enumerate} 
+\end{itemize} 
 
 Atributy této třídy jsou: 
 
@@ -314,7 +314,8 @@ První část experimentu se spouští pomocí příkazu \texttt{./model summer 
 Závěr: Experiment ukazuje, že i při výrazném snížení cen je možné dosáhnout značného zvýšení zisku. Při správném nastavení ceny vstupenky bude možné nejen udržet zájem návštěvníků, ale také zvýšit zisk. Tato strategie je užitečná nejen pro park z finančního hlediska, ale i pro návštěvníky. Ti získají bezplatný přístup do mnoha tematických zón a trhů se zbožím a produkty Disneylandu, stejně jako možnost platit pouze za ty atrakce, které si přejí navštívit.
 
 \section{Shrnutí simulačních experimentů a závěr}
-Simulace tak poskytuje komplexní přehled o provozu parku v nejvytíženějším období a umožňuje srovnání výnosnosti obou platebních modelů.
+Simulace tak poskytuje komplexní přehled o provozu parku v nejvytíženějším období a umožňuje srovnání výnosnosti obou platebních modelů. Z výsledků experimentů vyplývá, že rozdělení plateb mezi jednotlivé atrakce, místo vybírání jednorázového poplatku za vstupenku, výrazně zvýší zisk, i když budou ceny atrakcí nižší, než je uvedeno v Disneylandu jako Premier Access. A to bez zbytečné zátěže na atrakce a zaměstnance, což jsme ověřili analýzou maximálního počtu lidí ve frontách na každou atrakci a průměrného počtu lidí ve frontách. Výsledky těchto dat byly očekávané a odpovídaly realitě.
+
 \bibliographystyle{czechiso}
 \bibliography{citations.bib} 
 
