@@ -8,33 +8,33 @@
 #include <map>
 #include <iostream>
 
-#define ENTRANCE 30//was 30
+#define ENTRANCE 30 // Number of turnstiles at the entrance
 #define DAY_TICKET_PRICE 135
 
 
 float timeInQueue = 0;
-int AttractionsCount = 0; //test only
+int AttractionsCount = 0; 
 
-// Структура для зберігання даних про атракціон
+// Structure for storing attraction data
 struct Attraction {
-    int id;                 // ID атракціону
+    int id;                 
     int popularity;
-    bool isForAdults;       // Чи є обмеження для дорослих
+    bool isForAdults;      
     bool single_rider;
-    int capacity;           // Вмісткість
+    int capacity;           
     int people_in_row;
-    double rideDuration;    // Тривалість проходження атракціону
+    double rideDuration;    // Duration of attraction
     int price;
 };
 
 std::vector<Attraction> attractions = {
 ///id,popul,age,singl,capc,rowC,time,price
-    {0, 2,false,false, 20, 4, 300, 5}, // Flying Carpets 1  //nopremieracc
+    {0, 2,false,false, 20, 4, 300, 5}, // Flying Carpets 1  
     {1, 1,true,true, 20, 4, 300, 21}, // Turtle Coaster 2
-    {2, 2,true,true, 36, 6, 300, 5}, // Toy Soldier 3  //nopremieracc
-    {3, 3,false,false, 28, 2, 300, 5}, // Dog ZigZag 4 //nopremieracc
+    {2, 2,true,true, 36, 6, 300, 5}, // Toy Soldier 3  
+    {3, 3,false,false, 28, 2, 300, 5}, // Dog ZigZag 4 
     {4, 1,false,true, 24, 4, 7*60, 14}, // Ratatouille 5
-    {5, 2,true,true, 20, 4, 5*60, 5}, //  RC  Racer 6 //nopremieracc
+    {5, 2,true,true, 20, 4, 5*60, 5}, //  RC  Racer 6 
     {6, 3,false,false, 20, 2, 5*60, 5}, // Cars Road Trip 7
     {7, 1,true,false, 21, 21, 5*60, 14}, // Tower Terror 8
     {8, 2,false,true, 20, 4, 5*60, 16}, // Spider Man 9
@@ -50,9 +50,11 @@ std::map<std::string, int> seasonSettings = {
 };
 
 
-
+// Entrance
 Queue EntranceQ("Entrance Queue");
-Facility EntranceL[ENTRANCE]; 
+Facility EntranceL[ENTRANCE];
+
+// Attraction`s queue
 Queue SingleRideZero("Single empty  Ride Queue");
 
 Queue RegularRideQ0("Regular 0 Ride Queue");
@@ -99,14 +101,3 @@ Stat income9("Income from ticket pay attraction 9");
 
 
 const double ClOSE_TIME = 43000; //~12h
-
-// class Board: public Process {
-// public:
-//     void Behaviour();
-//     void start_boarding();
-//     }
-
-// class Ride : public Process {
-//     void Behavior();
-// }
-
