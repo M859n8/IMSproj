@@ -51,7 +51,7 @@
 \newpage
 
 \section{Úvod}
-V rámci tohoto projektu byla vytvořena modelová simulace jednoho z parků v Disneylandu v Paříži. Park nese název Walt Disney Studio a obsahuje 10 atrakcí a N tematických sekcí. Náš model ukazuje vstup do parku, volbu atrakce, čekání ve frontě na atrakci a samotnou jízdu na ní.
+V rámci tohoto projektu byla vytvořena modelová simulace jednoho z parků v Disneylandu v Paříži. Park nese název Walt Disney Studio a obsahuje 10 atrakcí a 4 tematických sekcí. Náš model ukazuje vstup do parku, volbu atrakce, čekání ve frontě na atrakci a samotnou jízdu na ní.
 
 Cílem naší simulace bylo porovnat zisk, který park generuje od návštěvníků za současného nastavení (tj. cena za vstupenku na celý park), s variantou, kdy návštěvníci platí za vstup na každou atrakci zvlášť. Smyslem experimentů je demonstrovat, že pokud by Disneyland vybíral poplatek za každou atrakci zvlášť, místo jednorázového vstupného do samotného parku, dosáhl by vyššího zisku.
 
@@ -87,10 +87,10 @@ Disneyland parky mají uživatelsky přívětivý systém pro sledování front 
 		Toy Soldier           & Oblíbená         & Ano              & 36               & 6            & 5         & 5        \\ \hline
 		Dog ZigZag            & Běžná            & Ne               & 28               & 2            & 5         & 5        \\ \hline
 		Ratatouille           & Velmi oblíbená   & Ano              & 24               & 4            & 7         & 14       \\ \hline
-		RC Racer              & Oblíbená         & Ne               & 20               & 2            & 5         & 5        \\ \hline
+		RC Racer              & Oblíbená         & Ne               & 20               & 4            & 5         & 5        \\ \hline
 		Cars Road Trip        & Běžná            & Ne               & 20               & 2            & 5         & 5        \\ \hline
-		Tower Terror          & Velmi oblíbená   & Ne               & 21               & 2            & 5         & 14       \\ \hline
-		Spider Man            & Oblíbená         & Ano              & 24               & 2            & 5         & 16       \\ \hline
+		Tower Terror          & Velmi oblíbená   & Ne               & 21               & 21           & 5         & 14       \\ \hline
+		Spider Man            & Oblíbená         & Ano              & 20               & 4            & 5         & 16       \\ \hline
 		Avengers 1            & Oblíbená         & Ano              & 24               & 2            & 5         & 12       \\ \hline
 	\end{tabular}
 	\caption{Popis atrakcí parku}
@@ -99,7 +99,7 @@ Disneyland parky mají uživatelsky přívětivý systém pro sledování front 
 
 Také jsme uvedli navrhovanou cenu za každou atrakci. Jako základ jsme použili cenu za prémiový přístup k atrakci (Disneyland nabízí možnost příplatku za přístup k atrakci bez čekání ve frontě. Protože se tato cena vypočítává na základě popularity a nákladnosti atrakce, rozhodli jsme se, že bude vhodná pro naši simulaci).
 
-Samostatná jízda je další specifikou Disney parků. Princip spočívá v tom, že pokud chcete atrakci navštívit ve skupině/rodině, bez problémů vás usadí společně. Kvůli tomu ale atrakce nejsou vždy plně obsazené (například v jednom řádku chce sedět rodina o třech lidech a za nimi jde pár. Ti se nevejdou do čtyřmístného řádku, takže jedno místo zůstane neobsazené), což prodlužuje čekací dobu. Proto existuje fronta pro samostatnou jízdu, která umožňuje zaplnit tato volná místa v řadách.
+Samostatná jízda je další specifikou Disney parků. Princip spočívá v tom, že pokud chcete atrakci navštívit ve skupině/rodině, bez problémů vás usadí společně. Kvůli tomu ale atrakce nejsou vždy plně obsazené. Například tříčlenná rodina chce sedět v jedné řadě a za ní jdou dva lidé, kteří chtějí sedět také spolu. Pokud jsou čtyři sedadla v řadě, budou sedět ve dvou řadách: tři v jedné řadě a dvě ve druhé. Pak budou tři místa volná, což prodlužuje čekací dobu a atrakce není plně využita. Proto existuje fronta pro samostatnou jízdu, která umožňuje zaplnit tato volná místa v řadách.
 
 Nejprve jsou tedy usazeni lidé ze standardní fronty a na volná místa pak lidé ze fronty pro samostatnou jízdu. Tím se snižuje počet neobsazených míst a zkracuje se čekací doba.
 Bohužel neexistují přesné informace o procentu lidí, kteří využívají možnost single rider. Proto jsme se rozhodli, že v naší simulaci bude člověk nejprve porovnávat dobu čekání (dostupnou na mapách Disneylandu, které umožňují sledovat vytíženost atrakcí v reálném čase). Pokud bude fronta na single rider kratší, v 50\% případů si člověk vybere tuto možnost.
@@ -136,7 +136,7 @@ Důležitý proces uzavírání atrakcí se aktivuje 10 minut před koncem provo
 \begin{enumerate}[label=\textbf{\arabic*.}]
     \item Atrakce čeká, až se naplní dostatečný počet lidí.
     \item Probíhá nástup návštěvníků podle řad.
-    \item Nejprve se obsadí místa ve frontě \textit{Regular}, od 1 osoby až po kapacitu jedné řady; zbývající místa jsou dle možností obsazena návštěvníky z fronty \textit{Single Rider}.
+    \item Nejprve se obsadí místa ve frontě \textit{Regular}, počet se volí od 1 osoby až po kapacitu jedné řady; zbývající místa jsou dle možností obsazena návštěvníky z fronty \textit{Single Rider}.
     \item Přechod k další řadě, a tak dále, dokud není atrakce plně obsazena.
     \item Provedení jízdy na atrakci.
     \item Aktivace procesů návštěvníků, konkrétně jejich odchod z atrakce.
@@ -257,8 +257,8 @@ Takže v zimním období vykazuje model dokonce vyšší procentní nárůst př
 	\begin{tabular}{|l|c|c|c|c|c|}
 		\hline
 		\textbf{Parametr}&\textbf{Flying Carpets}&\textbf{Turtle Coaster}&\textbf{Toy Soldier}&\textbf{Dog ZigZag}&\textbf{Ratatouille}\\ \hline
-		Max. délka fronty   &121                 & 80                 & 67                 & 89                 & 146      \\ \hline
-		Prům. délka fronty  &28                 & 35                 & 15                 & 23                 & 91         \\ \hline
+		Max. délka fronty   &135                 & 62                & 88                 & 106                 & 180     \\ \hline
+		Prům. délka fronty  &26                 & 29                & 19                 & 23                 & 91         \\ \hline
 		Popularita          &Populární         &Velmi populár.        &Populární          & Běžná          &Velmi populár.\\ \hline
 	\end{tabular}
 \end{table}
@@ -269,8 +269,8 @@ Takže v zimním období vykazuje model dokonce vyšší procentní nárůst př
 	\begin{tabular}{|l|c|c|c|c|c|}
 		\hline
 		\textbf{Parametr}   & \textbf{RC  Racer}& \textbf{Cars Road Trip}& \textbf{Tower Terror}& \textbf{Spider Man}& \textbf{Avengers}\\ \hline
-		Max. délka fronty   & 87                 & 78                & 153                 & 122               & 126               \\ \hline
-		Prům. délka fronty  & 34                & 21                 & 39                & 35                 & 73               \\ \hline
+		Max. délka fronty   & 85                 & 112                & 169                 & 100               & 109               \\ \hline
+		Prům. délka fronty  & 23                & 21                 & 44                & 33                 & 25               \\ \hline
 		Popularita          & Populární             & Běžná              & Velmi populární        & Populární          & Populární   \\ \hline
 	\end{tabular}
 \end{table}
@@ -283,15 +283,15 @@ Takže v zimním období vykazuje model dokonce vyšší procentní nárůst př
 		\hline
 		\textbf{Parametr}                                         & \textbf{Hodnota} \\ \hline
 		Příjem z denních vstupenek (EUR)                          & 607500,00 €   \\ \hline
-		Příjem z jednotlivých plateb za atrakce (EUR)             & 1705200,00 €   \\ \hline
-		Průměrný čas strávený ve frontách během dne na osobu (min) & 270,167 minut     \\ \hline
-		Průměrný počet navštívených atrakcí na osobu             & 28               \\ \hline
-		\textbf{Procentuální nárůst příjmu}                       & 180,69\%         \\ \hline
+		Příjem z jednotlivých plateb za atrakce (EUR)             & 1795644,00 €   \\ \hline
+		Průměrný čas strávený ve frontách během dne na osobu (min) & 256,276 minut     \\ \hline
+		Průměrný počet navštívených atrakcí na osobu             & 30               \\ \hline
+		\textbf{Procentuální nárůst příjmu}                       & 195,53\%         \\ \hline
 	\end{tabular}
 \end{table}
 
 
-Závěr: Příjem se zvýšil o 168,58\% v rušném období a o 180,69\%  v méně rušném období. To je očekávaný a pozitivní výsledek. Nicméně si uvědomujeme, že změna modelu platby za atrakce v Disneylandu může vést k poklesu počtu návštěvníků. Proto jsme se rozhodli provést druhý experiment, který umožňuje snížit ceny všech atrakcí pomocí zavedení dodatečného parametru. Považujeme, že takové snížení cen nejen pozitivně ovlivní zájem návštěvníků, ale také zajistí požadovaný růst příjmu.
+Závěr: Příjem se zvýšil o 166,74\% v rušném období a o 195,53\%  v méně rušném období. To je očekávaný a pozitivní výsledek. Nicméně si uvědomujeme, že změna modelu platby za atrakce v Disneylandu může vést k poklesu počtu návštěvníků. Proto jsme se rozhodli provést druhý experiment, který umožňuje snížit ceny všech atrakcí pomocí zavedení dodatečného parametru. Považujeme, že takové snížení cen nejen pozitivně ovlivní zájem návštěvníků, ale také zajistí požadovaný růst příjmu.
 
 \subsection{Experiment 2}
 
