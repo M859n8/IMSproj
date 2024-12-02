@@ -62,6 +62,49 @@ Validace našeho programu byla provedena následujícím způsobem: experimentá
 
 \section{Koncepce}
 \subsection{Koncepce - modelářská témata}
+Model měla za cíl simulovat chování v zábavním parku Walt Disney Studio Park v Paříži a spočítat finanční výhodu přechodu na systém plateb za jednotlivé atrakce. Pro srovnání jsme použili cenu jednodenního nedatovaného vstupného ve výši 135 eur, jak je uvedeno na oficiálních stránkách [1]. Počet návštěvníků za den jsme převzali z veřejně dostupných statistických údajů za roky 2024/23 [2]. Průměrně park navštíví 5000 lidí denně, přičemž počet návštěvníků se může lišit v závislosti na sezóně. Na základě zdrojů, které ukazují relativní vytížení parku v konkrétní dny [3], jsme zjistili, že nejvíce návštěvníků je v létě, o něco méně na jaře, běžný počet na podzim a nejmenší vytížení parku je v zimě.
+
+Otevírací doba parku se liší v závislosti na dni v týdnu a sezóně, proto jsme použili průměrné hodnoty od 9:00 do 21:00. Většina návštěvníků přichází během prvních hodin po otevření parku a čekají ve frontě na vstup. Předpokládáme, že si návštěvníci zakoupili vstupenky předem online a při vstupu do parku je stačí pouze naskenovat. Poté si návštěvník vybere, na kterou atrakci půjde. Na základě osobní zkušenosti a recenzí lidí ve veřejně dostupných zdrojích jsme zjistili, že volba atrakce závisí na čtyřech kritériích: zda již návštěvník atrakci navštívil, popularita atrakce, délka fronty u vstupu a vzdálenost atrakce.
+
+Část atrakcí má také omezení podle výšky, proto jsme zavedli dve role návštěvníků: dospělé a děti. Před začátkem výběru atrakcí je každému uživateli přiřazena role. Vyšli jsme ze statistických údajů, podle kterých v Disneylandu tvoří 78,7\% návštěvníků dospělí a pouze 21,3\% děti.[4]
+
+Disneyland parky mají uživatelsky přívětivý systém pro sledování front v reálném čase, na který jsme se snažili co nejvíce navázat. Pro výpočet čekací doby bylo nutné získat informace o délce trvání jednotlivých atrakcí a jejich kapacitě. Na základě dat získaných z fotografií a videí o parku jsme sestavili následující tabulku.
+\section*{Tabulka atrakcí}
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{|l|c|c|c|c|c|c|c|}
+		\hline
+		\textbf{Název} &\textbf{Popularita}&\textbf{Single ride}&\textbf{Kapacita}&\textbf{V řadu}&\textbf{Doba(m)}&\textbf{Cena(€)}\\ \hline
+		Flying Carpets        & Oblíbená         & Ne               & 20               & 4            & 5         & 5        \\ \hline
+		Turtle Coaster        & Velmi oblíbená   & Ano              & 20               & 4            & 5         & 21       \\ \hline
+		Toy Soldier           & Oblíbená         & Ano              & 36               & 6            & 5         & 5        \\ \hline
+		Dog ZigZag            & Běžná            & Ne               & 28               & 2            & 5         & 5        \\ \hline
+		Ratatouille           & Velmi oblíbená   & Ano              & 24               & 4            & 7         & 14       \\ \hline
+		RC Racer              & Oblíbená         & Ne               & 20               & 2            & 5         & 5        \\ \hline
+		Cars Road Trip        & Běžná            & Ne               & 20               & 2            & 5         & 5        \\ \hline
+		Tower Terror          & Velmi oblíbená   & Ne               & 21               & 2            & 5         & 14       \\ \hline
+		Spider Man            & Oblíbená         & Ano              & 24               & 2            & 5         & 16       \\ \hline
+		Avengers 1            & Oblíbená         & Ano              & 24               & 2            & 5         & 12       \\ \hline
+	\end{tabular}
+	\caption{Popis atrakcí parku}
+	\label{tab:attractions}
+\end{table}
+
+Také jsme uvedli navrhovanou cenu za každou atrakci. Jako základ jsme použili cenu za prémiový přístup k atrakci (Disneyland nabízí možnost příplatku za přístup k atrakci bez čekání ve frontě. Protože se tato cena vypočítává na základě popularity a nákladnosti atrakce, rozhodli jsme se, že bude vhodná pro naši simulaci).
+
+Samostatná jízda je další specifikou Disney parků. Princip spočívá v tom, že pokud chcete atrakci navštívit ve skupině/rodině, bez problémů vás usadí společně. Kvůli tomu ale atrakce nejsou vždy plně obsazené (například v jednom řádku chce sedět rodina o třech lidech a za nimi jde pár. Ti se nevejdou do čtyřmístného řádku, takže jedno místo zůstane neobsazené), což prodlužuje čekací dobu. Proto existuje fronta pro samostatnou jízdu, která umožňuje zaplnit tato volná místa v řadách.
+
+Nejprve jsou tedy usazeni lidé ze standardní fronty a na volná místa pak lidé ze fronty pro samostatnou jízdu. Tím se snižuje počet neobsazených míst a zkracuje se čekací doba.
+Bohužel neexistují přesné informace o procentu lidí, kteří využívají možnost single rider. Proto jsme se rozhodli, že v naší simulaci bude člověk nejprve porovnávat dobu čekání (dostupnou na mapách Disneylandu, které umožňují sledovat vytíženost atrakcí v reálném čase). Pokud bude fronta na single rider kratší, v 50\% případů si člověk vybere tuto možnost.
+
+
+Významnou součástí zábavy v parcích Disneylandu je také procházka tematickými zónami. Určili jsme, že tato procházka může trvat od 40 do 60 minut, což je dostatek času na to, aby návštěvník prošel tematickou zónu a ochutnal jídlo z místních stánků.
+
+Asi půl hodiny před zavřením parku lidé přestávají vybírat nové atrakce. Dojdou k poslední zvolené atrakci a vystojí tam frontu. V tuto dobu začínají atrakce fungovat na plný výkon, maximálně využívají svou kapacitu a snaží se přepravit všechny lidi, kteří ještě čekají ve frontě.
+
+
+
 \subsection{Koncepce - implementační témata}
 
 \section{Architektura simulačního modelu/simulátoru}

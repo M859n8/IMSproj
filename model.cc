@@ -33,8 +33,8 @@ public:
             Passivate(); // Wait until enough people are in the queue
 
             std::vector<Entity*> riders_in_cabin;   
-            
-            for (int i=0; i<currentAttraction.capacity; i++ ){
+            int rows = currentAttraction.capacity/currentAttraction.people_in_row;
+            for (int i=0; i<rows; i++){
                 int regular = 0;
                 int single = 0;
                 if (!SingleRideQ->empty() || !RegularRideQ->empty()){
@@ -57,23 +57,27 @@ public:
                     riders_in_cabin.push_back(RegularRideQ->GetFirst());
                     
                 }
-                Wait(4*regular);
+                Wait(5*regular);
 
                 for (int i = 0; i < single; i++){
                     // Wait(1);
                     riders_in_cabin.push_back(SingleRideQ->GetFirst());
                     // Wait(10);
                 }
-                Wait(4*single);
-                
+                Wait(5*single);
             }
             // Wait(riders_in_cabin.size()*10);
+            // if(currentAttraction.id == 1){
+            // printf("sended ride with %d\n", static_cast<int>(riders_in_cabin.size()));
+
+            // }
             Wait(currentAttraction.rideDuration); // Ride lasts for 5 minutes
             for (auto& rider : riders_in_cabin) {
                 rider->Activate();
             }
            
             riders_in_cabin.clear();
+            
 
         }
     }
@@ -123,7 +127,6 @@ class Person : public Process{
     Attraction current_attraction;
     int distanceToNext; // distance to the next attraction
     std::vector<bool> visitedAttractions;
-    // int AttractionsCount;
 
     void Behavior() {
         double arrival = Normal(1.5 * 3600.0, 0.5 * 3600.0);
@@ -166,7 +169,6 @@ class Person : public Process{
         
 
         bool isAdult = Random() < 0.787;
-        //AttractionsCount = 0; //TEST ONLY MAYBE DO NOT NEED THIS 
         currentAttraction = -1;
         while( Time < ClOSE_TIME-30*60){
             chooseAttraction(isAdult);
@@ -367,11 +369,10 @@ class Person : public Process{
             if(Random() < 0.3){ // go to park
                 themePark:
                 
-                Wait(Uniform(20 * 60, 40 * 60)); 
+                Wait(Uniform(40 * 60, 60 * 60)); 
             }
 
         }
-        // AttractionsAmount(AttractionsCount);
 
     }
     
@@ -508,7 +509,6 @@ class Person : public Process{
 
             currentAttraction = chosenAttraction;
         }
-        // return chosenAttraction;
     }
 };
 
@@ -545,7 +545,6 @@ public:
         ptr7->closingSoon(attractions[7], SingleRideZero, RegularRideQ7);
         ptr8->closingSoon(attractions[8], SingleRideQ8, RegularRideQ8);
         ptr9->closingSoon(attractions[9], SingleRideQ9, RegularRideQ9);
-        AttractionsAmount(AttractionsCount);
 
 
     }
@@ -615,7 +614,7 @@ int main(int argc , char **argv)
 
     Run();
 
-    EntranceQ.Output();
+    //EntranceQ.Output(); //additional tests
 
     SingleRideZero.Output();
     RegularRideQ0.Output();
@@ -645,36 +644,33 @@ int main(int argc , char **argv)
     RegularRideQ9.Output();
 
 
+    //additional tests for income from single ride
+    // income0.Output();
+    // income1.Output();
+    // income2.Output();
+    // income3.Output();
+    // income4.Output();
+    // income5.Output();
+    // income6.Output();
+    // income7.Output();
+    // income8.Output();
+    // income9.Output();
 
-    // for(int i= 0; i<ENTRANCE;){
-    //     EntranceL[i].Output();
-    //     // EntranceL.Output();
-    //     i+=3;
-
-    // }
-
-    income0.Output();
-    income1.Output();
-    income2.Output();
-    income3.Output();
-    income4.Output();
-    income5.Output();
-    income6.Output();
-    income7.Output();
-    income8.Output();
-    income9.Output();
     printf("+----------------------------------------------------------+\n");
-    printf("    Basic income from people that day: %d\n", people_count*basicPrice );
-    printf("    Income from all rides with a set price : %0.2f\n", income0.Sum()+income1.Sum()+income2.Sum()+
+    printf("\n");
+    printf("    Income from day tickets : %d\n", people_count*basicPrice );
+    printf("    Income with separate payment for each ride : %0.2f\n", income0.Sum()+income1.Sum()+income2.Sum()+
     income3.Sum()+income4.Sum()+income5.Sum()+income6.Sum()+income7.Sum()+income8.Sum()+income9.Sum());
+    printf("\n");
+
     printf("+----------------------------------------------------------+\n");
+    printf("\n");
 
-    AttractionsAmount.Output();
-
+    printf("    Average time spent in queuee during the day per person %0.2f\n", timeInQueue/people_count);
+    printf("    Average number of attractions per person  %d\n", AttractionsCount/people_count);
+    printf("\n");
     
-    printf("time in queue %0.2f, time per person %0.2f\n", timeInQueue, timeInQueue/people_count);
-    printf("amount of attractions %d,  per person  %d\n", AttractionsCount, AttractionsCount/people_count);
-    
+    printf("+----------------------------------------------------------+\n");
 
     // for(int i= 0; i<Ride1AMOUNT; i++){
     // Ride1[i].Output();

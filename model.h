@@ -28,7 +28,7 @@ struct Attraction {
 };
 
 std::vector<Attraction> attractions = {
-///id,popul,age,singl,capc,row,time,price
+///id,popul,age,singl,capc,rowC,time,price
     {0, 2,false,false, 20, 4, 300, 5}, // Flying Carpets 1  //nopremieracc
     {1, 1,true,true, 20, 4, 300, 21}, // Turtle Coaster 2
     {2, 2,true,true, 36, 6, 300, 5}, // Toy Soldier 3  //nopremieracc
@@ -96,7 +96,6 @@ Stat income7("Income from ticket pay attraction 7");
 Stat income8("Income from ticket pay attraction 8");
 Stat income9("Income from ticket pay attraction 9");
 
-Stat AttractionsAmount("Amount of attractions per person");
 
 
 const double ClOSE_TIME = 43000; //~12h
