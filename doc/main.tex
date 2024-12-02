@@ -174,10 +174,10 @@ Analogickým příkazem je také \texttt{./model summer}.
 
 Příklady možného spuštění programu:  
 \begin{itemize}
-    \item \texttt{./model summer [+/- číslo]}: spustí simulaci parku během letního dne s obvyklým počtem návštěvníků pro toto období. Nepovinný parametr `[+/- číslo]` upraví cenu všech atrakcí: zvýší nebo sníží základní cenu. Aktuální ceny atrakcí jsou nastaveny na úroveň z `Premier Access`. Tento parametr umožňuje testovat různé cenové změny.
-    \item \texttt{./model winter [+/- číslo]} 
-    \item \texttt{./model spring [+/- číslo]}
-    \item \texttt{./model autumn [+/- číslo]}
+    \item \texttt{./model summer [+/-číslo]}: spustí simulaci parku během letního dne s obvyklým počtem návštěvníků pro toto období. Nepovinný parametr `[+/- číslo]` upraví cenu všech atrakcí: zvýší nebo sníží základní cenu. Aktuální ceny atrakcí jsou nastaveny na úroveň z `Premier Access`. Tento parametr umožňuje testovat různé cenové změny.
+    \item \texttt{./model winter [+/-číslo]} 
+    \item \texttt{./model spring [+/-číslo]}
+    \item \texttt{./model autumn [+/-číslo]}
 \end{itemize} 
 Analogicky lze simulovat zimní, jarní a podzimní dny.  
 
@@ -189,7 +189,7 @@ Hlavním cílem našeho projektu bylo zjistit, zda bude finančně výhodné (a 
 
 \subsection{Experiment 1}
 
-\subsubsection{První čás}
+\subsubsection{První část}
 První část experimentu se spouští pomocí příkazu \texttt{make run} nebo \texttt{./model summer} a simuluje jeden den provozu parku.
 
 Pro simulaci jsme použili data z období nejvyšší návštěvnosti (léto) a na jejich základě vymodelovali zatížení parku v těchto podmínkách. Výstupy simulace zahrnují detailní analýzu, která obsahuje:
@@ -211,8 +211,8 @@ Výsledky modelování ukazují, že v letním období lidé strávili téměř 
 	\begin{tabular}{|l|c|c|c|c|c|}
 		\hline
 		\textbf{Parametr}&\textbf{Flying Carpets}&\textbf{Turtle Coaster}&\textbf{Toy Soldier}&\textbf{Dog ZigZag}&\textbf{Ratatouille}\\ \hline
-		Max. délka fronty   &152                 & 84                 & 85                 & 176                 & 205      \\ \hline
-		Prům. délka fronty  &69                 & 33                 & 19                 & 48                 & 117         \\ \hline
+		Max. délka fronty   &161                 & 80                 & 68                 & 149                 & 203      \\ \hline
+		Prům. délka fronty  &67                 & 37                 & 16                 & 48                 & 120         \\ \hline
 		Popularita          &Populární         &Velmi populár.        &Populární          & Běžná          &Velmi populár.\\ \hline
 	\end{tabular}
 \end{table}
@@ -223,8 +223,8 @@ Výsledky modelování ukazují, že v letním období lidé strávili téměř 
 	\begin{tabular}{|l|c|c|c|c|c|}
 		\hline
 		\textbf{Parametr}   & \textbf{RC  Racer}& \textbf{Cars Road Trip}& \textbf{Tower Terror}& \textbf{Spider Man}& \textbf{Avengers}\\ \hline
-		Max. délka fronty   & 103                 & 133                & 155                 & 143               & 114               \\ \hline
-		Prům. délka fronty  & 25                & 46                 & 39                & 78                 & 26               \\ \hline
+		Max. délka fronty   & 114                 & 120                & 172                 & 136               & 121               \\ \hline
+		Prům. délka fronty  & 30                & 47                 & 40                & 72                 & 85               \\ \hline
 		Popularita          & Populární             & Běžná              & Velmi populární        & Populární          & Populární   \\ \hline
 	\end{tabular}
 \end{table}
@@ -238,10 +238,10 @@ Výsledky modelování ukazují, že v letním období lidé strávili téměř 
 		\hline
 		\textbf{Parametr}                                         & \textbf{Hodnota} \\ \hline
 		Příjem z denních vstupenek (EUR)                          & 1 012 500,00 €   \\ \hline
-		Příjem z jednotlivých plateb za atrakce (EUR)             & 2 718 162,00 €   \\ \hline
-		Průměrný čas strávený ve frontách během dne na osobu (min) & 229,05 minut     \\ \hline
-		Průměrný počet navštívených atrakcí na osobu             & 28               \\ \hline
-		\textbf{Procentuální nárůst příjmu}                       & 168,58\%         \\ \hline
+		Příjem z jednotlivých plateb za atrakce (EUR)             & 2 700 786,00 €   \\ \hline
+		Průměrný čas strávený ve frontách během dne na osobu (min) & 239,39 minut     \\ \hline
+		Průměrný počet navštívených atrakcí na osobu             & 27               \\ \hline
+		\textbf{Procentuální nárůst příjmu}                       & 166,74\%         \\ \hline
 	\end{tabular}
 \end{table}
 
@@ -294,6 +294,24 @@ Takže v zimním období vykazuje model dokonce vyšší procentní nárůst př
 Závěr: Příjem se zvýšil o 168,58\% v rušném období a o 180,69\%  v méně rušném období. To je očekávaný a pozitivní výsledek. Nicméně si uvědomujeme, že změna modelu platby za atrakce v Disneylandu může vést k poklesu počtu návštěvníků. Proto jsme se rozhodli provést druhý experiment, který umožňuje snížit ceny všech atrakcí pomocí zavedení dodatečného parametru. Považujeme, že takové snížení cen nejen pozitivně ovlivní zájem návštěvníků, ale také zajistí požadovaný růst příjmu.
 
 \subsection{Experiment 2}
+První část experimentu se spouští pomocí příkazu \texttt{./model summer -4}. V tomto experimentu spustíme simulaci jednoho dne v létě, ale snížíme cenu každé atrakce o 4 eura, abychom přiblížili výsledky realitě. Příliš vysoké ceny by totiž mohly odradit návštěvníky od vyzkoušení některé z atrakcí.
+
+\begin{table}[h!]
+	\centering
+	\caption{Finanční a návštěvní údaje simulace Summer}
+	\label{tab:financial_and_visit_data}
+	\begin{tabular}{|l|c|}
+		\hline
+		\textbf{Parametr}                                         & \textbf{Hodnota} \\ \hline
+		Příjem z denních vstupenek (EUR)                          & 1 012 500,00 €   \\ \hline
+		Příjem z jednotlivých plateb za atrakce (EUR)             & 1 862 414,00 €   \\ \hline
+		Průměrný čas strávený ve frontách během dne na osobu (min) & 239,39 minut     \\ \hline
+		Průměrný počet navštívených atrakcí na osobu             & 27               \\ \hline
+		\textbf{Procentuální nárůst příjmu}                       & 83,95\%         \\ \hline
+	\end{tabular}
+\end{table}
+
+Závěr: Experiment ukazuje, že i při výrazném snížení cen je možné dosáhnout značného zvýšení zisku. Při správném nastavení ceny vstupenky bude možné nejen udržet zájem návštěvníků, ale také zvýšit zisk. Tato strategie je užitečná nejen pro park z finančního hlediska, ale i pro návštěvníky. Ti získají bezplatný přístup do mnoha tematických zón a trhů se zbožím a produkty Disneylandu, stejně jako možnost platit pouze za ty atrakce, které si přejí navštívit.
 
 \section{Shrnutí simulačních experimentů a závěr}
 Simulace tak poskytuje komplexní přehled o provozu parku v nejvytíženějším období a umožňuje srovnání výnosnosti obou platebních modelů.
