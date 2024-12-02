@@ -115,7 +115,114 @@ Hlavním cílem našeho projektu bylo zjistit, zda bude finančně výhodné (a 
 
 \subsection{Experiment 1}
 
+\subsubsection{První čás}
+První část experimentu se spouští pomocí příkazu \texttt{make run} nebo \texttt{./model summer} a simuluje jeden den provozu parku.
+
+Pro simulaci jsme použili data z období nejvyšší návštěvnosti (léto) a na jejich základě vymodelovali zatížení parku v těchto podmínkách. Výstupy simulace zahrnují detailní analýzu, která obsahuje:
+\begin{itemize}
+	\item Maximální a průměrnou délku front u jednotlivých atrakcí.
+	\item Průměrný čas strávený návštěvníkem ve frontách během dne.
+	\item Počet atrakcí navštívených jedním návštěvníkem za celý den.
+	\item Celkový příjem z prodeje vstupenek na celý den.
+	\item Celkový příjem získaný z individuálních plateb za jedotlivé atrakce.
+\end{itemize}
+
+
+Výsledky modelování ukazují, že v letním období lidé strávili téměř 4 hodiny denně neustále ve frontách, což je charakteristické pro Disneyland. Příjem vzrostl o 168,58\%.
+
+\begin{table}[h!]
+	\centering
+	\caption{Přehled atrakcí 1–5: délky front a popularita}
+	\label{tab:attractions_overview_1_5}
+	\begin{tabular}{|l|c|c|c|c|c|}
+		\hline
+		\textbf{Parametr}&\textbf{Flying Carpets}&\textbf{Turtle Coaster}&\textbf{Toy Soldier}&\textbf{Dog ZigZag}&\textbf{Ratatouille}\\ \hline
+		Max. délka fronty   &152                 & 84                 & 85                 & 176                 & 205      \\ \hline
+		Prům. délka fronty  &69                 & 33                 & 19                 & 48                 & 117         \\ \hline
+		Popularita          &Populární         &Velmi populár.        &Populární          & Běžná          &Velmi populár.\\ \hline
+	\end{tabular}
+\end{table}
+\begin{table}[h!]
+	\centering
+	\caption{Přehled atrakcí 6-10: délky front a popularita}
+	\label{tab:attractions_overview_6_10}
+	\begin{tabular}{|l|c|c|c|c|c|}
+		\hline
+		\textbf{Parametr}   & \textbf{RC  Racer}& \textbf{Cars Road Trip}& \textbf{Tower Terror}& \textbf{Spider Man}& \textbf{Avengers}\\ \hline
+		Max. délka fronty   & 103                 & 133                & 155                 & 143               & 114               \\ \hline
+		Prům. délka fronty  & 25                & 46                 & 39                & 78                 & 26               \\ \hline
+		Popularita          & Populární             & Běžná              & Velmi populární        & Populární          & Populární   \\ \hline
+	\end{tabular}
+\end{table}
+
+
+\begin{table}[h!]
+	\centering
+	\caption{Finanční a návštěvní údaje simulace Summer}
+	\label{tab:financial_and_visit_data}
+	\begin{tabular}{|l|c|}
+		\hline
+		\textbf{Parametr}                                         & \textbf{Hodnota} \\ \hline
+		Příjem z denních vstupenek (EUR)                          & 1 012 500,00 €   \\ \hline
+		Příjem z jednotlivých plateb za atrakce (EUR)             & 2 718 162,00 €   \\ \hline
+		Průměrný čas strávený ve frontách během dne na osobu (min) & 229,05 minut     \\ \hline
+		Průměrný počet navštívených atrakcí na osobu             & 28               \\ \hline
+		\textbf{Procentuální nárůst příjmu}                       & 168,58\%         \\ \hline
+	\end{tabular}
+\end{table}
+
+\subsubsection{Druhá část}
+Druhá část tohoto experimentu spočívala v hodnocení chování modelu během méně vytížené zimní sezóny. Program je spuštěn následujícím způsobem: ./model winter.
+
+Takže v zimním období vykazuje model dokonce vyšší procentní nárůst příjmu než v létě, konkrétně 180,69\%. To je očekávaný výsledek, protože počet návštěvníků je menší, zatížení parku nižší a lidé stíhají projet více atrakcí za den.
+
+\begin{table}[h!]
+	\centering
+	\caption{Přehled atrakcí 1–5: délky front a popularita}
+	\label{tab:attractions_overview_1_5}
+	\begin{tabular}{|l|c|c|c|c|c|}
+		\hline
+		\textbf{Parametr}&\textbf{Flying Carpets}&\textbf{Turtle Coaster}&\textbf{Toy Soldier}&\textbf{Dog ZigZag}&\textbf{Ratatouille}\\ \hline
+		Max. délka fronty   &121                 & 80                 & 67                 & 89                 & 146      \\ \hline
+		Prům. délka fronty  &28                 & 35                 & 15                 & 23                 & 91         \\ \hline
+		Popularita          &Populární         &Velmi populár.        &Populární          & Běžná          &Velmi populár.\\ \hline
+	\end{tabular}
+\end{table}
+\begin{table}[h!]
+	\centering
+	\caption{Přehled atrakcí 6-10: délky front a popularita}
+	\label{tab:attractions_overview_6_10}
+	\begin{tabular}{|l|c|c|c|c|c|}
+		\hline
+		\textbf{Parametr}   & \textbf{RC  Racer}& \textbf{Cars Road Trip}& \textbf{Tower Terror}& \textbf{Spider Man}& \textbf{Avengers}\\ \hline
+		Max. délka fronty   & 87                 & 78                & 153                 & 122               & 126               \\ \hline
+		Prům. délka fronty  & 34                & 21                 & 39                & 35                 & 73               \\ \hline
+		Popularita          & Populární             & Běžná              & Velmi populární        & Populární          & Populární   \\ \hline
+	\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+	\centering
+	\caption{Finanční a návštěvní údaje simulace Winter}
+	\label{tab:financial_and_visit_data}
+	\begin{tabular}{|l|c|}
+		\hline
+		\textbf{Parametr}                                         & \textbf{Hodnota} \\ \hline
+		Příjem z denních vstupenek (EUR)                          & 607500,00 €   \\ \hline
+		Příjem z jednotlivých plateb za atrakce (EUR)             & 1705200,00 €   \\ \hline
+		Průměrný čas strávený ve frontách během dne na osobu (min) & 270,167 minut     \\ \hline
+		Průměrný počet navštívených atrakcí na osobu             & 28               \\ \hline
+		\textbf{Procentuální nárůst příjmu}                       & 180,69\%         \\ \hline
+	\end{tabular}
+\end{table}
+
+
+Závěr: Příjem se zvýšil o 168,58\% v rušném období a o 180,69\%  v méně rušném období. To je očekávaný a pozitivní výsledek. Nicméně si uvědomujeme, že změna modelu platby za atrakce v Disneylandu může vést k poklesu počtu návštěvníků. Proto jsme se rozhodli provést druhý experiment, který umožňuje snížit ceny všech atrakcí pomocí zavedení dodatečného parametru. Považujeme, že takové snížení cen nejen pozitivně ovlivní zájem návštěvníků, ale také zajistí požadovaný růst příjmu.
+
+\subsection{Experiment 2}
+
 \section{Shrnutí simulačních experimentů a závěr}
+Simulace tak poskytuje komplexní přehled o provozu parku v nejvytíženějším období a umožňuje srovnání výnosnosti obou platebních modelů.
 \bibliographystyle{czechiso}
 \bibliography{citations.bib} 
 
