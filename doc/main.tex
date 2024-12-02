@@ -16,6 +16,9 @@
 \usepackage{array}
 \usepackage{enumitem}
 \usepackage{bm}
+\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 
 \begin{document}
 \begin{center}
@@ -59,6 +62,9 @@ Tuto práci zpracovali Vladyslava Bilyk a Maryna Kucher. Informace byly získán
 Validace našeho programu byla provedena následujícím způsobem: experimentálně, po několika spuštěních modelu, byly statistické výstupy dat porovnány s očekávanými údaji, které odpovídají realitě. Každá fáze modelování byla analyzována z hlediska souladu s reálnými procesy. Vstupní parametry pro simulaci, jako je cena za vstupenku, počet návštěvníků za den, počet atrakcí, jejich kapacita a některé další údaje, byly čerpány z oficiálních stránek Disneylandu.
 
 \section{Rozbor tématu a použitých metod/technologií}
+Rozvrh parku se často mění, proto jsme pro experimenty vybrali jednu z jeho variant: od 9:00 do 21:00. Návštěvníci přicházejí v rozmezí od 10:00 do 12:00 a poté se řadí do fronty k turniketům u vchodu. Celkem je zde 30 turniketů. Park nabízí návštěvníkům dva typy zábavy: tematické parky a 10 atrakcí (1). Po výběru atrakce se návštěvník postaví do fronty podle svého výběru: buď do běžné fronty, určené pro skupiny návštěvníků, kteří chtějí sedět vedle sebe, nebo do fronty „Single Rider“, pokud ji daná atrakce má. Tato fronta slouží k obsazení volných míst po běžné frontě jedním návštěvníkem. Po dokončení jízdy na atrakci se návštěvník může rozhodnout, zda se projde parkem, nebo pokračuje v návštěvě dalších atrakcí. S blížící se dobou zavírání lidé přestávají chodit na atrakce a odcházejí buď do tematických parků na večerní program, nebo z Disneylandu.
+\subsection{Popis použitých technologií a metod}
+Pro náš projekt jsme použili knihovnu SIMLIB a programovací jazyk C++. C++ byl zvolen, protože tento jazyk zajišťuje snadnou práci s daty naší modelu, jako jsou fronty, atrakce a statistiky, což ho činí optimálním pro modelování. Pro inspiraci základním použitím procesů v SIMLIB jsme využili příklady z demonstračních cvičení (2).
 
 \section{Koncepce}
 \subsection{Koncepce - modelářská témata}
@@ -106,8 +112,76 @@ Asi půl hodiny před zavřením parku lidé přestávají vybírat nové atrakc
 
 
 \subsection{Koncepce - implementační témata}
+Model práce zábavního parku je omezena na jeden den jeho provozu.
+Systém se skládá z následujících hlavních procesů: návštěvníci a atrakce. Každá atrakce má následující vstupní parametry: popularita, vhodnost pro děti, dostupnost služby Single Rider, kapacita, délka trvání atrakce a její cena. Generátor okamžitě vytvoří všechny návštěvníky, kteří postupně v průběhu ranního časového intervalu přicházejí ke vstupu do zábavního parku. Atrakce se aktivují, když do fronty vstoupí návštěvníci, kteří naplní kapacitu atrakce, čímž začíná proces nástupu a následné jízdy.
+
+Důležitý proces uzavírání atrakcí se aktivuje 10 minut před koncem provozní doby a umožní posledním návštěvníkům využít atrakce. Významnou součástí procesů jsou fronty: fronta na vstup a fronty na atrakce. Obsluha front probíhá na principu: kdo přijde první, je první obsloužen.
+
+\begin{algorithm}
+\caption{Algoritmus každého návštěvníka}
+\begin{algorithmic}[1]
+    \State Postaví se do fronty u vstupních turniketů a poté projde jedním z nich.
+    \While{čas \textless  uzavírací čas}
+        \State Vybere si atrakci.
+        \State Postaví se do fronty k atrakci a čeká, až se naplní požadovaný počet lidí.
+        \State Nástup na atrakci a následná jízda.
+        \If{chce jít do tematického parku}
+            \State Procházka tematickým parkem.
+        \EndIf
+    \EndWhile
+\end{algorithmic}
+\end{algorithm}
+
+\textbf{Popis procesu atrakce}
+\begin{enumerate}[label=\textbf{\arabic*.}]
+    \item Atrakce čeká, až se naplní dostatečný počet lidí.
+    \item Probíhá nástup návštěvníků podle řad.
+    \item Nejprve se obsadí místa ve frontě \textit{Regular}, od 1 osoby až po kapacitu jedné řady; zbývající místa jsou dle možností obsazena návštěvníky z fronty \textit{Single Rider}.
+    \item Přechod k další řadě, a tak dále, dokud není atrakce plně obsazena.
+    \item Provedení jízdy na atrakci.
+    \item Aktivace procesů návštěvníků, konkrétně jejich odchod z atrakce.
+\end{enumerate}
 
 \section{Architektura simulačního modelu/simulátoru}
+V simulátoru jsou návštěvníci parku implementováni procesem `Person`. Tato třída má následující atributy:  
+
+\begin{itemize}
+    \item \texttt{currentAttraction}: ID atrakce, na které se návštěvník právě nachází (nebo -1, pokud je u vstupu).  
+    \item \texttt{current\_attraction}: struktura obsahující podrobné informace o atrakci, na které se návštěvník právě nachází nebo kterou plánuje navštívit.  
+    \item Proměnná \texttt{distanceToNext}: pomáhá vypočítat přibližný čas, který návštěvník potřebuje na přesun k další atrakci.  
+    \item Pole \texttt{visitedAttractions}: uchovává informace o atrakcích, které návštěvník již navštívil.  
+\end{itemize}
+
+Proces atrakce je implementován třídou `Ride`, která obsahuje:  
+
+\begin{enumerate}
+    \item Funkci pro běžné chování atrakce.  
+    \item Funkci \texttt{closingSoon()}, která umožňuje atrakci spustit pro poslední návštěvníky ve frontě, aniž by byla zcela naplněna.  
+\end{enumerate} 
+
+Atributy této třídy jsou: 
+
+\begin{itemize}
+    \item Strukturu \texttt{current\_attraction} s údaji o konkrétní atrakci.  
+    \item Ukazatel na frontu \texttt{SingleRideQ} (pro jednotlivé jezdce).  
+    \item Ukazatel na běžnou frontu \texttt{RegularRideQ}.  
+\end{itemize} 
+
+
+Kompilace programu probíhá příkazem \texttt{make}.  
+První experiment se spustí příkazem \texttt{make run}.  
+Analogickým příkazem je také \texttt{./model summer}.  
+
+Příklady možného spuštění programu:  
+\begin{itemize}
+    \item \texttt{./model summer [+/- číslo]}: spustí simulaci parku během letního dne s obvyklým počtem návštěvníků pro toto období. Nepovinný parametr `[+/- číslo]` upraví cenu všech atrakcí: zvýší nebo sníží základní cenu. Aktuální ceny atrakcí jsou nastaveny na úroveň z `Premier Access`. Tento parametr umožňuje testovat různé cenové změny.
+    \item \texttt{./model winter [+/- číslo]} 
+    \item \texttt{./model spring [+/- číslo]}
+    \item \texttt{./model autumn [+/- číslo]}
+\end{itemize} 
+Analogicky lze simulovat zimní, jarní a podzimní dny.  
+
+
 
 \section{Podstata simulačních experimentů a jejich průběh}
 
