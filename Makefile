@@ -14,3 +14,5 @@ $(TARGET): $(SRCS)
 clean:
 	rm -f $(TARGET)
 
+run:
+	./model summer
