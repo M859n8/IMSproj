@@ -53,15 +53,21 @@ public:
                 }
 
                 for (int i = 0; i < regular; i++){
-
+                    // Wait(1);
                     riders_in_cabin.push_back(RegularRideQ->GetFirst());
+                    
                 }
+                Wait(4*regular);
 
                 for (int i = 0; i < single; i++){
+                    // Wait(1);
                     riders_in_cabin.push_back(SingleRideQ->GetFirst());
+                    // Wait(10);
                 }
+                Wait(4*single);
                 
             }
+            // Wait(riders_in_cabin.size()*10);
             Wait(currentAttraction.rideDuration); // Ride lasts for 5 minutes
             for (auto& rider : riders_in_cabin) {
                 rider->Activate();
@@ -162,7 +168,7 @@ class Person : public Process{
         bool isAdult = Random() < 0.787;
         //AttractionsCount = 0; //TEST ONLY MAYBE DO NOT NEED THIS 
         currentAttraction = -1;
-        while( Time < ClOSE_TIME-10*60){
+        while( Time < ClOSE_TIME-30*60){
             chooseAttraction(isAdult);
             if(currentAttraction == -1){
                 goto themePark;
@@ -172,7 +178,7 @@ class Person : public Process{
                 if (speed <= 0) {
                     speed = 1; // Мінімальне значення для уникнення помилки
                 }
-
+                Wait(150*distanceToNext);
               
             }
             float queueTime; //test only
@@ -373,7 +379,12 @@ class Person : public Process{
         if(current_attraction.single_rider){
             
             double singleRider = Random();
-            if (singleRider <= 0.5) {
+            if(SingleRideQ.Length() > RegularRideQ.Length()){
+                this->singleRider = false;
+
+                Into(RegularRideQ);
+            }
+            else if (singleRider <= 0.5) {
                 this->singleRider = true;
                 Into(SingleRideQ);
             }else {
@@ -475,7 +486,7 @@ class Person : public Process{
             // Розрахунок часу чекання 
             int WaitTimeR = static_cast<int>(queueSizeR / attraction.capacity) * attraction.rideDuration;
             // printf("printf: %d\n");
-            if(WaitTimeR > 60*60){
+            if(WaitTimeR > 100*60){
                 // printf("skip attraction");
                 continue;
             }
